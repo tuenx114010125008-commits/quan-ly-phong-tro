@@ -17,28 +17,26 @@ export class ManagementView {
     private authService: AuthService
   ) {}
 
-  // ==========================================
-  // 1. QUẢN LÝ PHÒNG TRỌ
-  // ==========================================
+  // 1. Menu phong tro
   public async handleRoomMenu(): Promise<void> {
     while (true) {
       console.clear();
-      console.log('\x1b[36m=========================================================\x1b[0m');
-      console.log('\x1b[1;33m               🏢 QUẢN LÝ PHÒNG TRỌ                    \x1b[0m');
-      console.log('\x1b[36m=========================================================\x1b[0m');
-      console.log(' [1] Danh sách tất cả phòng trọ');
-      console.log(' [2] Thêm phòng trọ mới');
-      console.log(' [3] Cập nhật thông tin phòng');
-      console.log(' [4] Xóa phòng');
-      console.log(' [5] Tìm kiếm phòng (theo số phòng, ID)');
-      console.log(' [6] Lọc phòng (theo trạng thái, giá thuê, diện tích)');
-      console.log(' [7] Đổi trạng thái phòng (TRỐNG / ĐÃ THUÊ / BẢO TRÌ)');
-      console.log(' [8] So sánh 2 phòng');
-      console.log(' [9] Quản lý trang thiết bị trong phòng');
-      console.log(' [0] Quay lại Menu chính');
-      console.log('\x1b[36m---------------------------------------------------------\x1b[0m');
+      console.log('=========================================================');
+      console.log('                   QUAN LY PHONG TRO                     ');
+      console.log('=========================================================');
+      console.log(' [1] Danh sach tat ca phong tro');
+      console.log(' [2] Them phong tro moi');
+      console.log(' [3] Cap nhat thong tin phong');
+      console.log(' [4] Xoa phong tro');
+      console.log(' [5] Tim kiem phong (so phong, ma phong)');
+      console.log(' [6] Loc phong (theo trang thai, gia thue, dien tich)');
+      console.log(' [7] Doi trang thai phong (AVAILABLE / RENTED / MAINTENANCE)');
+      console.log(' [8] So sanh 2 phong');
+      console.log(' [9] Quan ly thiet bi trong phong');
+      console.log(' [0] Quay lai menu chinh');
+      console.log('---------------------------------------------------------');
 
-      const choice = await InputPrompt.ask('👉 Nhập lựa chọn của bạn: ');
+      const choice = await InputPrompt.ask('Nhap lua chon: ');
       if (choice === '0') break;
 
       switch (choice) {
@@ -71,20 +69,20 @@ export class ManagementView {
           await this.manageRoomEquipment();
           break;
         default:
-          console.log('\x1b[31m⚠️ Lựa chọn không hợp lệ!\x1b[0m');
+          console.log('[Loi] Lua chon khong hop le.');
           await InputPrompt.pause();
       }
     }
   }
 
   private displayRoomList(rooms: any[]): void {
-    console.log(`\n\x1b[1m--- DANH SÁCH PHÒNG TRỌ (${rooms.length} phòng) ---\x1b[0m`);
-    const headers = ['Mã Phòng', 'Số Phòng', 'Trạng Thái', 'Diện Tích', 'Giá Thuê / Tháng', 'Mô Tả'];
+    console.log(`\n--- DANH SACH PHONG TRO (${rooms.length} phong) ---`);
+    const headers = ['Ma Phong', 'So Phong', 'Trang Thai', 'Dien Tich', 'Gia Thue / Thang', 'Mo Ta'];
     const rows = rooms.map(r => [
       r.id,
       r.roomNumber,
       Formatter.formatStatus(r.status),
-      `${r.area} m²`,
+      `${r.area} m2`,
       Formatter.formatCurrency(r.monthlyRent),
       r.description || '-'
     ]);
@@ -92,36 +90,36 @@ export class ManagementView {
   }
 
   private async addRoom(): Promise<void> {
-    console.log('\n\x1b[1;32m--- THÊM PHÒNG TRỌ MỚI ---\x1b[0m');
-    const roomNumber = await InputPrompt.ask('Số phòng (VD: 101, 201): ');
-    const area = await InputPrompt.askNumber('Diện tích m² (VD: 25.5): ');
-    const monthlyRent = await InputPrompt.askNumber('Giá thuê hàng tháng VNĐ (VD: 3500000): ');
-    const description = await InputPrompt.ask('Mô tả phòng (tùy chọn): ');
+    console.log('\n--- THEM PHONG TRO MOI ---');
+    const roomNumber = await InputPrompt.ask('So phong (VD: 101, 201): ');
+    const area = await InputPrompt.askNumber('Dien tich (m2): ');
+    const monthlyRent = await InputPrompt.askNumber('Gia thue thang (VND): ');
+    const description = await InputPrompt.ask('Mo ta phong (tuy chon): ');
 
     const res = this.roomService.addRoom({ roomNumber, area, monthlyRent, description });
     if (res.success) {
-      console.log(`\x1b[32m✔ ${res.message}\x1b[0m`);
+      console.log(`[Thanh cong] ${res.message}`);
     } else {
-      console.log(`\x1b[31m✖ ${res.message}\x1b[0m`);
+      console.log(`[Loi] ${res.message}`);
       res.errors?.forEach(e => console.log(`   - ${e}`));
     }
     await InputPrompt.pause();
   }
 
   private async editRoom(): Promise<void> {
-    const id = await InputPrompt.ask('\nNhập mã phòng cần sửa (VD: P001): ');
+    const id = await InputPrompt.ask('\nNhap ma phong can sua (VD: P001): ');
     const room = this.roomService.getRoomById(id);
     if (!room) {
-      console.log('\x1b[31m✖ Không tìm thấy phòng!\x1b[0m');
+      console.log('[Loi] Khong tim thay phong.');
       await InputPrompt.pause();
       return;
     }
 
-    console.log(`Đang sửa phòng: ${room.roomNumber} (Để trống nếu giữ nguyên)`);
-    const roomNumber = await InputPrompt.ask(`Số phòng mới [${room.roomNumber}]: `);
-    const areaStr = await InputPrompt.ask(`Diện tích mới [${room.area}]: `);
-    const rentStr = await InputPrompt.ask(`Giá thuê mới [${room.monthlyRent}]: `);
-    const description = await InputPrompt.ask(`Mô tả mới [${room.description || ''}]: `);
+    console.log(`Dang sua phong: ${room.roomNumber} (De trong neu giu nguyen)`);
+    const roomNumber = await InputPrompt.ask(`So phong moi [${room.roomNumber}]: `);
+    const areaStr = await InputPrompt.ask(`Dien tich moi [${room.area}]: `);
+    const rentStr = await InputPrompt.ask(`Gia thue moi [${room.monthlyRent}]: `);
+    const description = await InputPrompt.ask(`Mo ta moi [${room.description || ''}]: `);
 
     const updateData: any = {};
     if (roomNumber) updateData.roomNumber = roomNumber;
@@ -131,47 +129,45 @@ export class ManagementView {
 
     const res = this.roomService.updateRoom(id, updateData);
     if (res.success) {
-      console.log(`\x1b[32m✔ ${res.message}\x1b[0m`);
+      console.log(`[Thanh cong] ${res.message}`);
     } else {
-      console.log(`\x1b[31m✖ ${res.message}\x1b[0m`);
+      console.log(`[Loi] ${res.message}`);
     }
     await InputPrompt.pause();
   }
 
   private async deleteRoom(): Promise<void> {
-    const id = await InputPrompt.ask('\nNhập mã phòng cần xóa (VD: P001): ');
-    const confirm = await InputPrompt.ask(`Bạn có chắc chắn muốn xóa phòng "${id}"? (y/N): `);
+    const id = await InputPrompt.ask('\nNhap ma phong can xoa (VD: P001): ');
+    const confirm = await InputPrompt.ask(`Ban co chac chan muon xoa phong "${id}"? (y/N): `);
     if (confirm.toLowerCase() === 'y') {
       const res = this.roomService.deleteRoom(id);
       if (res.success) {
-        console.log(`\x1b[32m✔ ${res.message}\x1b[0m`);
+        console.log(`[Thanh cong] ${res.message}`);
       } else {
-        console.log(`\x1b[31m✖ ${res.message}\x1b[0m`);
+        console.log(`[Loi] ${res.message}`);
       }
-    } else {
-      console.log('Đã hủy thao tác xóa.');
     }
     await InputPrompt.pause();
   }
 
   private async searchRoom(): Promise<void> {
-    const kw = await InputPrompt.ask('\nNhập từ khóa tìm kiếm (Số phòng / Mã phòng): ');
+    const kw = await InputPrompt.ask('\nNhap tu khoa tim kiem (So phong / Ma phong): ');
     const results = this.roomService.searchRooms(kw);
     this.displayRoomList(results);
     await InputPrompt.pause();
   }
 
   private async filterRoom(): Promise<void> {
-    console.log('\n--- LỌC PHÒNG TRỌ ---');
-    console.log('Trạng thái: 1. AVAILABLE | 2. RENTED | 3. MAINTENANCE | 0. Tất cả');
-    const stChoice = await InputPrompt.ask('Chọn trạng thái: ');
+    console.log('\n--- LOC PHONG TRO ---');
+    console.log('Trang thai: 1. AVAILABLE | 2. RENTED | 3. MAINTENANCE | 0. Tat ca');
+    const stChoice = await InputPrompt.ask('Chon trang thai: ');
     let status: RoomStatus | undefined;
     if (stChoice === '1') status = RoomStatus.AVAILABLE;
     if (stChoice === '2') status = RoomStatus.RENTED;
     if (stChoice === '3') status = RoomStatus.MAINTENANCE;
 
-    const minPriceStr = await InputPrompt.ask('Giá thuê tối thiểu VNĐ (để trống nếu không lọc): ');
-    const maxPriceStr = await InputPrompt.ask('Giá thuê tối đa VNĐ (để trống nếu không lọc): ');
+    const minPriceStr = await InputPrompt.ask('Gia thue toi thieu (de trong neu bo qua): ');
+    const maxPriceStr = await InputPrompt.ask('Gia thue toi da (de trong neu bo qua): ');
 
     const results = this.roomService.filterRooms({
       status,
@@ -184,12 +180,11 @@ export class ManagementView {
   }
 
   private async changeRoomStatus(): Promise<void> {
-    const id = await InputPrompt.ask('\nNhập mã phòng (VD: P001): ');
-    console.log('Chọn trạng thái mới:');
-    console.log('1. AVAILABLE (Phòng trống)');
-    console.log('2. RENTED (Đã cho thuê)');
-    console.log('3. MAINTENANCE (Đang sửa chữa / bảo trì)');
-    const choice = await InputPrompt.ask('Lựa chọn (1-3): ');
+    const id = await InputPrompt.ask('\nNhap ma phong (VD: P001): ');
+    console.log('1. AVAILABLE (Phong trong)');
+    console.log('2. RENTED (Da thue)');
+    console.log('3. MAINTENANCE (Bao tri)');
+    const choice = await InputPrompt.ask('Chon trang thai (1-3): ');
 
     let status = RoomStatus.AVAILABLE;
     if (choice === '2') status = RoomStatus.RENTED;
@@ -197,49 +192,49 @@ export class ManagementView {
 
     const res = this.roomService.updateStatus(id, status);
     if (res.success) {
-      console.log(`\x1b[32m✔ ${res.message}\x1b[0m`);
+      console.log(`[Thanh cong] ${res.message}`);
     } else {
-      console.log(`\x1b[31m✖ ${res.message}\x1b[0m`);
+      console.log(`[Loi] ${res.message}`);
     }
     await InputPrompt.pause();
   }
 
   private async compareRooms(): Promise<void> {
-    const id1 = await InputPrompt.ask('\nNhập mã phòng thứ nhất (VD: P001): ');
-    const id2 = await InputPrompt.ask('Nhập mã phòng thứ hai (VD: P002): ');
+    const id1 = await InputPrompt.ask('\nNhap ma phong thu nhat (VD: P001): ');
+    const id2 = await InputPrompt.ask('Nhap ma phong thu hai (VD: P002): ');
 
     const res = this.roomService.compareRooms(id1, id2);
     if (!res.success || !res.data) {
-      console.log(`\x1b[31m✖ ${res.message}\x1b[0m`);
+      console.log(`[Loi] ${res.message}`);
       await InputPrompt.pause();
       return;
     }
 
     const { room1, room2, priceDiff, areaDiff } = res.data;
-    console.log('\n\x1b[1;33m--- BẢNG SO SÁNH PHÒNG ---\x1b[0m');
-    const headers = ['Tiêu chí', `Phòng ${room1.roomNumber} (${room1.id})`, `Phòng ${room2.roomNumber} (${room2.id})`, 'Chênh lệch'];
+    console.log('\n--- BANG SO SANH PHONG ---');
+    const headers = ['Tieu Chi', `Phong ${room1.roomNumber} (${room1.id})`, `Phong ${room2.roomNumber} (${room2.id})`, 'Chenh Lech'];
     const rows = [
-      ['Trạng thái', Formatter.formatStatus(room1.status), Formatter.formatStatus(room2.status), '-'],
-      ['Diện tích', `${room1.area} m²`, `${room2.area} m²`, `${areaDiff > 0 ? '+' : ''}${areaDiff} m²`],
-      ['Giá thuê / tháng', Formatter.formatCurrency(room1.monthlyRent), Formatter.formatCurrency(room2.monthlyRent), `${priceDiff > 0 ? '+' : ''}${Formatter.formatCurrency(priceDiff)}`],
-      ['Số thiết bị', `${room1.equipment?.length || 0} món`, `${room2.equipment?.length || 0} món`, '-']
+      ['Trang thai', Formatter.formatStatus(room1.status), Formatter.formatStatus(room2.status), '-'],
+      ['Dien tich', `${room1.area} m2`, `${room2.area} m2`, `${areaDiff > 0 ? '+' : ''}${areaDiff} m2`],
+      ['Gia thue / thang', Formatter.formatCurrency(room1.monthlyRent), Formatter.formatCurrency(room2.monthlyRent), `${priceDiff > 0 ? '+' : ''}${Formatter.formatCurrency(priceDiff)}`],
+      ['So thiet bi', `${room1.equipment?.length || 0} mon`, `${room2.equipment?.length || 0} mon`, '-']
     ];
     Formatter.formatTable(headers, rows);
     await InputPrompt.pause();
   }
 
   private async manageRoomEquipment(): Promise<void> {
-    const roomId = await InputPrompt.ask('\nNhập mã phòng cần xem/quản lý thiết bị (VD: P001): ');
+    const roomId = await InputPrompt.ask('\nNhap ma phong can xem thiet bi (VD: P001): ');
     const room = this.roomService.getRoomById(roomId);
     if (!room) {
-      console.log('\x1b[31m✖ Không tìm thấy phòng!\x1b[0m');
+      console.log('[Loi] Khong tim thay phong.');
       await InputPrompt.pause();
       return;
     }
 
     const equipmentList = this.equipmentService.getByRoomId(roomId);
-    console.log(`\n\x1b[1m--- DANH SÁCH THIẾT BỊ PHÒNG ${room.roomNumber} ---\x1b[0m`);
-    const headers = ['Mã TB', 'Tên Thiết Bị', 'Tình Trạng', 'Giá Trị (VNĐ)'];
+    console.log(`\n--- DANH SACH THIET BI PHONG ${room.roomNumber} ---`);
+    const headers = ['Ma TB', 'Ten Thiet Bi', 'Tinh Trang', 'Gia Tri (VND)'];
     const rows = equipmentList.map(e => [
       e.id,
       e.name,
@@ -248,35 +243,35 @@ export class ManagementView {
     ]);
     Formatter.formatTable(headers, rows);
 
-    console.log('\n[1] Thêm thiết bị mới vào phòng');
-    console.log('[2] Xóa thiết bị khỏi phòng');
-    console.log('[3] Cập nhật tình trạng thiết bị');
-    console.log('[0] Quay lại');
-    const op = await InputPrompt.ask('Lựa chọn: ');
+    console.log('\n[1] Them thiet bi');
+    console.log('[2] Xoa thiet bi');
+    console.log('[3] Cap nhat tinh trang');
+    console.log('[0] Quay lai');
+    const op = await InputPrompt.ask('Lua chon: ');
 
     if (op === '1') {
-      const name = await InputPrompt.ask('Tên thiết bị (VD: Máy lạnh, Tủ lạnh): ');
-      const value = await InputPrompt.askNumber('Giá trị ước tính VNĐ: ');
+      const name = await InputPrompt.ask('Ten thiet bi: ');
+      const value = await InputPrompt.askNumber('Gia tri uoc tinh (VND): ');
       const res = this.equipmentService.addEquipment({ roomId, name, value });
       if (res.success) {
-        console.log(`\x1b[32m✔ ${res.message}\x1b[0m`);
+        console.log(`[Thanh cong] ${res.message}`);
       } else {
-        console.log(`\x1b[31m✖ ${res.message}\x1b[0m`);
+        console.log(`[Loi] ${res.message}`);
       }
       await InputPrompt.pause();
     } else if (op === '2') {
-      const tbId = await InputPrompt.ask('Nhập mã thiết bị cần xóa (VD: TB001): ');
+      const tbId = await InputPrompt.ask('Ma thiet bi can xoa: ');
       const res = this.equipmentService.deleteEquipment(tbId);
       if (res.success) {
-        console.log(`\x1b[32m✔ ${res.message}\x1b[0m`);
+        console.log(`[Thanh cong] ${res.message}`);
       } else {
-        console.log(`\x1b[31m✖ ${res.message}\x1b[0m`);
+        console.log(`[Loi] ${res.message}`);
       }
       await InputPrompt.pause();
     } else if (op === '3') {
-      const tbId = await InputPrompt.ask('Nhập mã thiết bị (VD: TB001): ');
-      console.log('1. GOOD (Tốt) | 2. NEW (Mới) | 3. DAMAGED (Hư hỏng) | 4. MAINTENANCE (Đang sửa)');
-      const c = await InputPrompt.ask('Chọn tình trạng: ');
+      const tbId = await InputPrompt.ask('Ma thiet bi: ');
+      console.log('1. GOOD | 2. NEW | 3. DAMAGED | 4. MAINTENANCE');
+      const c = await InputPrompt.ask('Chon tinh trang: ');
       let cond = EquipmentCondition.GOOD;
       if (c === '2') cond = EquipmentCondition.NEW;
       if (c === '3') cond = EquipmentCondition.DAMAGED;
@@ -284,33 +279,31 @@ export class ManagementView {
 
       const res = this.equipmentService.updateCondition(tbId, cond);
       if (res.success) {
-        console.log(`\x1b[32m✔ ${res.message}\x1b[0m`);
+        console.log(`[Thanh cong] ${res.message}`);
       } else {
-        console.log(`\x1b[31m✖ ${res.message}\x1b[0m`);
+        console.log(`[Loi] ${res.message}`);
       }
       await InputPrompt.pause();
     }
   }
 
-  // ==========================================
-  // 2. QUẢN LÝ KHÁCH THUÊ
-  // ==========================================
+  // 2. Menu khach thue
   public async handleCustomerMenu(): Promise<void> {
     while (true) {
       console.clear();
-      console.log('\x1b[36m=========================================================\x1b[0m');
-      console.log('\x1b[1;33m               👥 QUẢN LÝ KHÁCH THUÊ                    \x1b[0m');
-      console.log('\x1b[36m=========================================================\x1b[0m');
-      console.log(' [1] Danh sách tất cả khách thuê');
-      console.log(' [2] Thêm khách thuê mới');
-      console.log(' [3] Cập nhật thông tin khách');
-      console.log(' [4] Xóa khách thuê');
-      console.log(' [5] Tìm kiếm khách thuê (Họ tên, CCCD, SĐT, Quê quán)');
-      console.log(' [6] Khóa / Kích hoạt khách thuê');
-      console.log(' [0] Quay lại Menu chính');
-      console.log('\x1b[36m---------------------------------------------------------\x1b[0m');
+      console.log('=========================================================');
+      console.log('                   QUAN LY KHACH THUE                    ');
+      console.log('=========================================================');
+      console.log(' [1] Danh sach khach thue');
+      console.log(' [2] Them khach thue moi');
+      console.log(' [3] Cap nhat thong tin khach');
+      console.log(' [4] Xoa khach thue');
+      console.log(' [5] Tim kiem khach thue');
+      console.log(' [6] Khoa / Mo khoa trang thai khach');
+      console.log(' [0] Quay lai menu chinh');
+      console.log('---------------------------------------------------------');
 
-      const choice = await InputPrompt.ask('👉 Nhập lựa chọn của bạn: ');
+      const choice = await InputPrompt.ask('Nhap lua chon: ');
       if (choice === '0') break;
 
       switch (choice) {
@@ -334,15 +327,15 @@ export class ManagementView {
           await this.toggleCustomerStatus();
           break;
         default:
-          console.log('\x1b[31m⚠️ Lựa chọn không hợp lệ!\x1b[0m');
+          console.log('[Loi] Lua chon khong hop le.');
           await InputPrompt.pause();
       }
     }
   }
 
   private displayCustomerList(customers: any[]): void {
-    console.log(`\n\x1b[1m--- DANH SÁCH KHÁCH THUÊ TRỌ (${customers.length} người) ---\x1b[0m`);
-    const headers = ['Mã KH', 'Họ Và Tên', 'Ngày Sinh', 'Số CCCD', 'Số ĐT', 'Quê Quán', 'Xe / Biển Số', 'Trạng Thái'];
+    console.log(`\n--- DANH SACH KHACH THUE (${customers.length} nguoi) ---`);
+    const headers = ['Ma KH', 'Ho Va Ten', 'Ngay Sinh', 'So CCCD', 'So DT', 'Que Quan', 'Xe / Bien So', 'Trang Thai'];
     const rows = customers.map(c => [
       c.id,
       c.fullName,
@@ -357,39 +350,39 @@ export class ManagementView {
   }
 
   private async addCustomer(): Promise<void> {
-    console.log('\n\x1b[1;32m--- THÊM KHÁCH THUÊ MỚI ---\x1b[0m');
-    const fullName = await InputPrompt.ask('Họ và tên (VD: Nguyen Van A): ');
-    const dateOfBirth = await InputPrompt.ask('Ngày sinh YYYY-MM-DD (VD: 2000-05-15): ');
-    const cccd = await InputPrompt.ask('Số CCCD (12 chữ số): ');
-    const phone = await InputPrompt.ask('Số điện thoại (10 chữ số): ');
-    const hometown = await InputPrompt.ask('Quê quán (Tỉnh / Thành phố): ');
-    const vehicle = await InputPrompt.ask('Phương tiện / Biển số xe (tùy chọn): ');
+    console.log('\n--- THEM KHACH THUE MOI ---');
+    const fullName = await InputPrompt.ask('Ho va ten (VD: Nguyen Van A): ');
+    const dateOfBirth = await InputPrompt.ask('Ngay sinh YYYY-MM-DD (VD: 2000-05-15): ');
+    const cccd = await InputPrompt.ask('So CCCD (12 chu so): ');
+    const phone = await InputPrompt.ask('So dien thoai (10 chu so): ');
+    const hometown = await InputPrompt.ask('Que quan: ');
+    const vehicle = await InputPrompt.ask('Phuong tien / Bien so xe (tuy chon): ');
 
     const res = this.customerService.addCustomer({ fullName, dateOfBirth, cccd, phone, hometown, vehicle });
     if (res.success) {
-      console.log(`\x1b[32m✔ ${res.message}\x1b[0m`);
+      console.log(`[Thanh cong] ${res.message}`);
     } else {
-      console.log(`\x1b[31m✖ ${res.message}\x1b[0m`);
+      console.log(`[Loi] ${res.message}`);
       res.errors?.forEach(e => console.log(`   - ${e}`));
     }
     await InputPrompt.pause();
   }
 
   private async editCustomer(): Promise<void> {
-    const id = await InputPrompt.ask('\nNhập mã khách hàng cần sửa (VD: KH001): ');
+    const id = await InputPrompt.ask('\nNhap ma khach hang can sua (VD: KH001): ');
     const c = this.customerService.getCustomerById(id);
     if (!c) {
-      console.log('\x1b[31m✖ Không tìm thấy khách hàng!\x1b[0m');
+      console.log('[Loi] Khong tim thay khach hang.');
       await InputPrompt.pause();
       return;
     }
 
-    console.log(`Đang sửa khách: ${c.fullName} (Để trống nếu giữ nguyên)`);
-    const fullName = await InputPrompt.ask(`Họ tên mới [${c.fullName}]: `);
-    const phone = await InputPrompt.ask(`Số ĐT mới [${c.phone}]: `);
-    const cccd = await InputPrompt.ask(`CCCD mới [${c.cccd}]: `);
-    const hometown = await InputPrompt.ask(`Quê quán mới [${c.hometown}]: `);
-    const vehicle = await InputPrompt.ask(`Xe mới [${c.vehicle || ''}]: `);
+    console.log(`Dang sua khach: ${c.fullName} (De trong neu giu nguyen)`);
+    const fullName = await InputPrompt.ask(`Ho ten moi [${c.fullName}]: `);
+    const phone = await InputPrompt.ask(`So DT moi [${c.phone}]: `);
+    const cccd = await InputPrompt.ask(`CCCD moi [${c.cccd}]: `);
+    const hometown = await InputPrompt.ask(`Que quan moi [${c.hometown}]: `);
+    const vehicle = await InputPrompt.ask(`Xe moi [${c.vehicle || ''}]: `);
 
     const updateData: any = {};
     if (fullName) updateData.fullName = fullName;
@@ -400,39 +393,39 @@ export class ManagementView {
 
     const res = this.customerService.updateCustomer(id, updateData);
     if (res.success) {
-      console.log(`\x1b[32m✔ ${res.message}\x1b[0m`);
+      console.log(`[Thanh cong] ${res.message}`);
     } else {
-      console.log(`\x1b[31m✖ ${res.message}\x1b[0m`);
+      console.log(`[Loi] ${res.message}`);
     }
     await InputPrompt.pause();
   }
 
   private async deleteCustomer(): Promise<void> {
-    const id = await InputPrompt.ask('\nNhập mã khách hàng cần xóa (VD: KH001): ');
-    const confirm = await InputPrompt.ask(`Bạn có chắc chắn muốn xóa khách hàng "${id}"? (y/N): `);
+    const id = await InputPrompt.ask('\nNhap ma khach hang can xoa (VD: KH001): ');
+    const confirm = await InputPrompt.ask(`Ban co chac muon xoa khach hang "${id}"? (y/N): `);
     if (confirm.toLowerCase() === 'y') {
       const res = this.customerService.deleteCustomer(id);
       if (res.success) {
-        console.log(`\x1b[32m✔ ${res.message}\x1b[0m`);
+        console.log(`[Thanh cong] ${res.message}`);
       } else {
-        console.log(`\x1b[31m✖ ${res.message}\x1b[0m`);
+        console.log(`[Loi] ${res.message}`);
       }
     }
     await InputPrompt.pause();
   }
 
   private async searchCustomer(): Promise<void> {
-    const kw = await InputPrompt.ask('\nNhập từ khóa tìm kiếm (Họ tên / CCCD / SĐT / Quê quán): ');
+    const kw = await InputPrompt.ask('\nNhap tu khoa tim kiem (Ho ten / CCCD / SDT / Que quan): ');
     const results = this.customerService.searchCustomers(kw);
     this.displayCustomerList(results);
     await InputPrompt.pause();
   }
 
   private async toggleCustomerStatus(): Promise<void> {
-    const id = await InputPrompt.ask('\nNhập mã khách hàng (VD: KH001): ');
+    const id = await InputPrompt.ask('\nNhap ma khach hang: ');
     const c = this.customerService.getCustomerById(id);
     if (!c) {
-      console.log('\x1b[31m✖ Không tìm thấy khách hàng!\x1b[0m');
+      console.log('[Loi] Khong tim thay khach.');
       await InputPrompt.pause();
       return;
     }
@@ -440,32 +433,30 @@ export class ManagementView {
     const newStatus = c.status === CustomerStatus.ACTIVE ? CustomerStatus.INACTIVE : CustomerStatus.ACTIVE;
     const res = this.customerService.updateStatus(id, newStatus);
     if (res.success) {
-      console.log(`\x1b[32m✔ ${res.message}\x1b[0m`);
+      console.log(`[Thanh cong] ${res.message}`);
     } else {
-      console.log(`\x1b[31m✖ ${res.message}\x1b[0m`);
+      console.log(`[Loi] ${res.message}`);
     }
     await InputPrompt.pause();
   }
 
-  // ==========================================
-  // 3. QUẢN LÝ DỊCH VỤ
-  // ==========================================
+  // 3. Menu dich vu
   public async handleServiceMenu(): Promise<void> {
     while (true) {
       console.clear();
-      console.log('\x1b[36m=========================================================\x1b[0m');
-      console.log('\x1b[1;33m               💡 QUẢN LÝ DỊCH VỤ                       \x1b[0m');
-      console.log('\x1b[36m=========================================================\x1b[0m');
-      console.log(' [1] Danh sách tất cả dịch vụ');
-      console.log(' [2] Thêm dịch vụ mới');
-      console.log(' [3] Cập nhật đơn giá dịch vụ');
-      console.log(' [4] Bật / Tắt trạng thái cung cấp dịch vụ');
-      console.log(' [5] Xóa dịch vụ');
-      console.log(' [6] Tìm kiếm dịch vụ');
-      console.log(' [0] Quay lại Menu chính');
-      console.log('\x1b[36m---------------------------------------------------------\x1b[0m');
+      console.log('=========================================================');
+      console.log('                   QUAN LY BANG GIA DICH VU              ');
+      console.log('=========================================================');
+      console.log(' [1] Danh sach dich vu');
+      console.log(' [2] Them dich vu moi');
+      console.log(' [3] Cap nhat don gia dich vu');
+      console.log(' [4] Bat / Tat trang thai dich vu');
+      console.log(' [5] Xoa dich vu');
+      console.log(' [6] Tim kiem dich vu');
+      console.log(' [0] Quay lai menu chinh');
+      console.log('---------------------------------------------------------');
 
-      const choice = await InputPrompt.ask('👉 Nhập lựa chọn của bạn: ');
+      const choice = await InputPrompt.ask('Nhap lua chon: ');
       if (choice === '0') break;
 
       switch (choice) {
@@ -489,15 +480,15 @@ export class ManagementView {
           await this.searchService();
           break;
         default:
-          console.log('\x1b[31m⚠️ Lựa chọn không hợp lệ!\x1b[0m');
+          console.log('[Loi] Lua chon khong hop le.');
           await InputPrompt.pause();
       }
     }
   }
 
   private displayServiceList(services: any[]): void {
-    console.log(`\n\x1b[1m--- BẢNG GIÁ DỊCH VỤ HIỆN HÀNH (${services.length} dịch vụ) ---\x1b[0m`);
-    const headers = ['Mã DV', 'Tên Dịch Vụ', 'Đơn Vị Tính', 'Đơn Giá (VNĐ)', 'Trạng Thái', 'Ghi Chú'];
+    console.log(`\n--- BANG GIA DICH VU (${services.length} dich vu) ---`);
+    const headers = ['Ma DV', 'Ten Dich Vu', 'Don Vi', 'Don Gia (VND)', 'Trang Thai', 'Ghi Chu'];
     const rows = services.map(s => [
       s.id,
       s.name,
@@ -510,10 +501,10 @@ export class ManagementView {
   }
 
   private async addService(): Promise<void> {
-    console.log('\n\x1b[1;32m--- THÊM DỊCH VỤ MỚI ---\x1b[0m');
-    const name = await InputPrompt.ask('Tên dịch vụ (VD: Giặt sấy tự động): ');
-    console.log('Đơn vị tính: 1. kWh | 2. m3 | 3. người/tháng | 4. phòng/tháng | 5. lần');
-    const uChoice = await InputPrompt.ask('Chọn đơn vị (1-5): ');
+    console.log('\n--- THEM DICH VU MOI ---');
+    const name = await InputPrompt.ask('Ten dich vu: ');
+    console.log('Don vi: 1. kWh | 2. m3 | 3. nguoi/thang | 4. phong/thang | 5. lan');
+    const uChoice = await InputPrompt.ask('Chon don vi (1-5): ');
     const units: Record<string, ServiceUnit> = {
       '1': 'kWh',
       '2': 'm3',
@@ -522,93 +513,91 @@ export class ManagementView {
       '5': 'lần'
     };
     const unit = units[uChoice] || 'phòng/tháng';
-    const unitPrice = await InputPrompt.askNumber('Đơn giá VNĐ: ');
-    const description = await InputPrompt.ask('Mô tả dịch vụ: ');
+    const unitPrice = await InputPrompt.askNumber('Don gia (VND): ');
+    const description = await InputPrompt.ask('Mo ta dich vu: ');
 
     const res = this.serviceService.addService({ name, unit, unitPrice, description });
     if (res.success) {
-      console.log(`\x1b[32m✔ ${res.message}\x1b[0m`);
+      console.log(`[Thanh cong] ${res.message}`);
     } else {
-      console.log(`\x1b[31m✖ ${res.message}\x1b[0m`);
+      console.log(`[Loi] ${res.message}`);
       res.errors?.forEach(e => console.log(`   - ${e}`));
     }
     await InputPrompt.pause();
   }
 
   private async updateServicePrice(): Promise<void> {
-    const id = await InputPrompt.ask('\nNhập mã dịch vụ cần sửa giá (VD: DV001): ');
+    const id = await InputPrompt.ask('\nNhap ma dich vu can sua gia (VD: DV001): ');
     const s = this.serviceService.getServiceById(id);
     if (!s) {
-      console.log('\x1b[31m✖ Không tìm thấy dịch vụ!\x1b[0m');
+      console.log('[Loi] Khong tim thay dich vu.');
       await InputPrompt.pause();
       return;
     }
 
-    console.log(`Dịch vụ: "${s.name}" | Giá hiện tại: ${Formatter.formatCurrency(s.unitPrice)}/${s.unit}`);
-    const newPrice = await InputPrompt.askNumber('Nhập đơn giá mới VNĐ: ');
+    console.log(`Dich vu: "${s.name}" | Gia hien tai: ${Formatter.formatCurrency(s.unitPrice)}/${s.unit}`);
+    const newPrice = await InputPrompt.askNumber('Nhap don gia moi (VND): ');
     const res = this.serviceService.updatePrice(id, newPrice);
     if (res.success) {
-      console.log(`\x1b[32m✔ ${res.message}\x1b[0m`);
+      console.log(`[Thanh cong] ${res.message}`);
     } else {
-      console.log(`\x1b[31m✖ ${res.message}\x1b[0m`);
+      console.log(`[Loi] ${res.message}`);
     }
     await InputPrompt.pause();
   }
 
   private async toggleServiceStatus(): Promise<void> {
-    const id = await InputPrompt.ask('\nNhập mã dịch vụ (VD: DV001): ');
+    const id = await InputPrompt.ask('\nNhap ma dich vu: ');
     const res = this.serviceService.toggleStatus(id);
     if (res.success) {
-      console.log(`\x1b[32m✔ ${res.message}\x1b[0m`);
+      console.log(`[Thanh cong] ${res.message}`);
     } else {
-      console.log(`\x1b[31m✖ ${res.message}\x1b[0m`);
+      console.log(`[Loi] ${res.message}`);
     }
     await InputPrompt.pause();
   }
 
   private async deleteService(): Promise<void> {
-    const id = await InputPrompt.ask('\nNhập mã dịch vụ cần xóa (VD: DV001): ');
-    const confirm = await InputPrompt.ask(`Bạn có chắc muốn xóa dịch vụ "${id}"? (y/N): `);
+    const id = await InputPrompt.ask('\nNhap ma dich vu can xoa: ');
+    const confirm = await InputPrompt.ask(`Ban co chac muon xoa dich vu "${id}"? (y/N): `);
     if (confirm.toLowerCase() === 'y') {
       const res = this.serviceService.deleteService(id);
       if (res.success) {
-        console.log(`\x1b[32m✔ ${res.message}\x1b[0m`);
+        console.log(`[Thanh cong] ${res.message}`);
       } else {
-        console.log(`\x1b[31m✖ ${res.message}\x1b[0m`);
+        console.log(`[Loi] ${res.message}`);
       }
     }
     await InputPrompt.pause();
   }
 
   private async searchService(): Promise<void> {
-    const kw = await InputPrompt.ask('\nNhập từ khóa tìm kiếm: ');
+    const kw = await InputPrompt.ask('\nNhap tu khoa tim kiem: ');
     const results = this.serviceService.searchServices(kw);
     this.displayServiceList(results);
     await InputPrompt.pause();
   }
 
-  // ==========================================
-  // 4. QUẢN LÝ TÀI KHOẢN NGƯỜI DÙNG (ADMIN)
-  // ==========================================
+  // 4. Menu quan ly user
   public async handleUserMenu(): Promise<void> {
     while (true) {
       console.clear();
-      console.log('\x1b[36m=========================================================\x1b[0m');
-      console.log('\x1b[1;33m               🔐 QUẢN LÝ TÀI KHOẢN & PHÂN QUYỀN        \x1b[0m');
-      console.log('\x1b[36m=========================================================\x1b[0m');
-      console.log(' [1] Danh sách người dùng hệ thống');
-      console.log(' [2] Tạo tài khoản mới');
-      console.log(' [0] Quay lại Menu chính');
-      console.log('\x1b[36m---------------------------------------------------------\x1b[0m');
+      console.log('=========================================================');
+      console.log('                   QUAN LY TAI KHOAN                     ');
+      console.log('=========================================================');
+      console.log(' [1] Danh sach nguoi dung');
+      console.log(' [2] Tao tai khoan moi');
+      console.log(' [0] Quay lai menu chinh');
+      console.log('---------------------------------------------------------');
 
-      const choice = await InputPrompt.ask('👉 Nhập lựa chọn của bạn: ');
+      const choice = await InputPrompt.ask('Nhap lua chon: ');
       if (choice === '0') break;
 
       switch (choice) {
         case '1':
           const users = this.authService.getAllUsers();
-          console.log(`\n\x1b[1m--- DANH SÁCH TÀI KHOẢN HỆ THỐNG (${users.length} tài khoản) ---\x1b[0m`);
-          const headers = ['Mã USR', 'Tên Đăng Nhập', 'Họ Tên', 'Vai Trò (Role)', 'Trạng Thái', 'Đăng Nhập Gần Nhất'];
+          console.log(`\n--- DANH SACH TAI KHOAN (${users.length} tai khoan) ---`);
+          const headers = ['Ma USR', 'Ten Dang Nhap', 'Ho Ten', 'Vai Tro', 'Trang Thai', 'Dang Nhap Gan Nhat'];
           const rows = users.map(u => [
             u.id,
             u.username,
@@ -621,26 +610,26 @@ export class ManagementView {
           await InputPrompt.pause();
           break;
         case '2':
-          console.log('\n\x1b[1;32m--- TẠO TÀI KHOẢN MỚI ---\x1b[0m');
-          const username = await InputPrompt.ask('Tên đăng nhập: ');
-          const password = await InputPrompt.ask('Mật khẩu: ');
-          const fullName = await InputPrompt.ask('Họ và tên hiển thị: ');
-          console.log('Vai trò: 1. ADMIN | 2. MANAGER | 3. STAFF');
-          const r = await InputPrompt.ask('Chọn vai trò (1-3): ');
+          console.log('\n--- TAO TAI KHOAN MOI ---');
+          const username = await InputPrompt.ask('Ten dang nhap: ');
+          const password = await InputPrompt.ask('Mat khau: ');
+          const fullName = await InputPrompt.ask('Ho va ten hien thi: ');
+          console.log('Vai tro: 1. ADMIN | 2. MANAGER | 3. STAFF');
+          const r = await InputPrompt.ask('Chon vai tro (1-3): ');
           let role = UserRole.STAFF;
           if (r === '1') role = UserRole.ADMIN;
           if (r === '2') role = UserRole.MANAGER;
 
           const res = this.authService.createUser({ username, password, fullName, role });
           if (res.success) {
-            console.log(`\x1b[32m✔ ${res.message}\x1b[0m`);
+            console.log(`[Thanh cong] ${res.message}`);
           } else {
-            console.log(`\x1b[31m✖ ${res.message}\x1b[0m`);
+            console.log(`[Loi] ${res.message}`);
           }
           await InputPrompt.pause();
           break;
         default:
-          console.log('\x1b[31m⚠️ Lựa chọn không hợp lệ!\x1b[0m');
+          console.log('[Loi] Lua chon khong hop le.');
           await InputPrompt.pause();
       }
     }

@@ -21,25 +21,23 @@ export class RentalFinanceView {
     private authService: AuthService
   ) {}
 
-  // ==========================================
-  // 1. QUẢN LÝ HỢP ĐỒNG THUÊ PHÒNG
-  // ==========================================
+  // 1. Menu hop dong
   public async handleContractMenu(): Promise<void> {
     while (true) {
       console.clear();
-      console.log('\x1b[36m=========================================================\x1b[0m');
-      console.log('\x1b[1;33m               📝 QUẢN LÝ HỢP ĐỒNG THUÊ PHÒNG           \x1b[0m');
-      console.log('\x1b[36m=========================================================\x1b[0m');
-      console.log(' [1] Danh sách tất cả hợp đồng');
-      console.log(' [2] Tạo hợp đồng thuê phòng mới');
-      console.log(' [3] Gia hạn thời hạn hợp đồng');
-      console.log(' [4] Kết thúc / Hủy hợp đồng trước hạn');
-      console.log(' [5] Tìm kiếm hợp đồng');
-      console.log(' [6] Danh sách hợp đồng sắp hết hạn (trong 30 ngày)');
-      console.log(' [0] Quay lại Menu chính');
-      console.log('\x1b[36m---------------------------------------------------------\x1b[0m');
+      console.log('=========================================================');
+      console.log('                   QUAN LY HOP DONG THUE                 ');
+      console.log('=========================================================');
+      console.log(' [1] Danh sach hop dong');
+      console.log(' [2] Tao hop dong moi');
+      console.log(' [3] Gia han hop dong');
+      console.log(' [4] Ket thuc hop dong');
+      console.log(' [5] Tim kiem hop dong');
+      console.log(' [6] Danh sach hop dong sap het han (trong 30 ngay)');
+      console.log(' [0] Quay lai menu chinh');
+      console.log('---------------------------------------------------------');
 
-      const choice = await InputPrompt.ask('👉 Nhập lựa chọn của bạn: ');
+      const choice = await InputPrompt.ask('Nhap lua chon: ');
       if (choice === '0') break;
 
       switch (choice) {
@@ -64,15 +62,15 @@ export class RentalFinanceView {
           await InputPrompt.pause();
           break;
         default:
-          console.log('\x1b[31m⚠️ Lựa chọn không hợp lệ!\x1b[0m');
+          console.log('[Loi] Lua chon khong hop le.');
           await InputPrompt.pause();
       }
     }
   }
 
   private displayContractList(contracts: any[]): void {
-    console.log(`\n\x1b[1m--- DANH SÁCH HỢP ĐỒNG THUÊ (${contracts.length} hợp đồng) ---\x1b[0m`);
-    const headers = ['Mã HĐ', 'Mã Phòng', 'Số Khách', 'Bắt Đầu', 'Kết Thúc', 'Tiền Cọc', 'Giá Thuê/Tháng', 'Trạng Thái'];
+    console.log(`\n--- DANH SACH HOP DONG (${contracts.length} hop dong) ---`);
+    const headers = ['Ma HD', 'Ma Phong', 'So Khach', 'Bat Dau', 'Ket Thuc', 'Tien Coc', 'Gia Thue/Thang', 'Trang Thai'];
     const rows = contracts.map(c => [
       c.id,
       c.roomId,
@@ -81,23 +79,23 @@ export class RentalFinanceView {
       Formatter.formatDate(c.endDate),
       Formatter.formatCurrency(c.deposit),
       Formatter.formatCurrency(c.monthlyRent),
-      c.status === ContractStatus.ACTIVE ? '\x1b[32mĐANG HIỆU LỰC\x1b[0m' : (c.status === ContractStatus.EXPIRED ? '\x1b[33mHẾT HẠN\x1b[0m' : '\x1b[31mĐÃ CHẤM DỨT\x1b[0m')
+      c.status === ContractStatus.ACTIVE ? 'DANG HIEU LUC' : (c.status === ContractStatus.EXPIRED ? 'HET HAN' : 'DA CHAM DUT')
     ]);
     Formatter.formatTable(headers, rows);
   }
 
   private async createContract(): Promise<void> {
-    console.log('\n\x1b[1;32m--- LẬP HỢP ĐỒNG THUÊ PHÒNG MỚI ---\x1b[0m');
-    const roomId = await InputPrompt.ask('Nhập mã phòng cần thuê (VD: P002): ');
-    const custInput = await InputPrompt.ask('Nhập các mã khách thuê (cách nhau dấu phẩy, VD: KH001, KH002): ');
+    console.log('\n--- LAP HOP DONG THUE MOI ---');
+    const roomId = await InputPrompt.ask('Ma phong can thue (VD: P002): ');
+    const custInput = await InputPrompt.ask('Ma khach thue (cach nhau dau phay, VD: KH001, KH002): ');
     const customerIds = custInput.split(',').map(s => s.trim()).filter(Boolean);
 
-    const startDate = await InputPrompt.ask('Ngày bắt đầu YYYY-MM-DD (VD: 2026-10-01): ');
-    const endDate = await InputPrompt.ask('Ngày kết thúc YYYY-MM-DD (VD: 2027-10-01): ');
-    const deposit = await InputPrompt.askNumber('Tiền đặt cọc VNĐ (VD: 3000000): ');
-    const rentInput = await InputPrompt.ask('Giá thuê/tháng (để trống để lấy giá mặc định của phòng): ');
+    const startDate = await InputPrompt.ask('Ngay bat dau YYYY-MM-DD (VD: 2026-10-01): ');
+    const endDate = await InputPrompt.ask('Ngay ket thuc YYYY-MM-DD (VD: 2027-10-01): ');
+    const deposit = await InputPrompt.askNumber('Tien dat coc (VND): ');
+    const rentInput = await InputPrompt.ask('Gia thue/thang (de trong de lay gia goc cua phong): ');
     const monthlyRent = rentInput ? Number(rentInput) : undefined;
-    const notes = await InputPrompt.ask('Ghi chú hợp đồng: ');
+    const notes = await InputPrompt.ask('Ghi chu: ');
 
     const res = this.contractService.createContract({
       roomId,
@@ -110,54 +108,54 @@ export class RentalFinanceView {
     });
 
     if (res.success) {
-      console.log(`\x1b[32m✔ ${res.message}\x1b[0m`);
+      console.log(`[Thanh cong] ${res.message}`);
     } else {
-      console.log(`\x1b[31m✖ ${res.message}\x1b[0m`);
+      console.log(`[Loi] ${res.message}`);
       res.errors?.forEach(e => console.log(`   - ${e}`));
     }
     await InputPrompt.pause();
   }
 
   private async renewContract(): Promise<void> {
-    const id = await InputPrompt.ask('\nNhập mã hợp đồng cần gia hạn (VD: HD001): ');
+    const id = await InputPrompt.ask('\nNhap ma hop dong can gia han (VD: HD001): ');
     const c = this.contractService.getContractById(id);
     if (!c) {
-      console.log('\x1b[31m✖ Không tìm thấy hợp đồng!\x1b[0m');
+      console.log('[Loi] Khong tim thay hop dong.');
       await InputPrompt.pause();
       return;
     }
 
-    console.log(`Hợp đồng ${id} hiện tại kết thúc vào ngày: ${Formatter.formatDate(c.endDate)}`);
-    const newEndDate = await InputPrompt.ask('Nhập ngày kết thúc mới (YYYY-MM-DD): ');
-    const newRentStr = await InputPrompt.ask(`Giá thuê mới VNĐ (để trống nếu giữ nguyên ${Formatter.formatCurrency(c.monthlyRent)}): `);
+    console.log(`Hop dong ${id} ket thuc vao: ${Formatter.formatDate(c.endDate)}`);
+    const newEndDate = await InputPrompt.ask('Ngay ket thuc moi (YYYY-MM-DD): ');
+    const newRentStr = await InputPrompt.ask(`Gia thue moi (de trong neu giu ${Formatter.formatCurrency(c.monthlyRent)}): `);
     const newRent = newRentStr ? Number(newRentStr) : undefined;
 
     const res = this.contractService.renewContract(id, newEndDate, newRent);
     if (res.success) {
-      console.log(`\x1b[32m✔ ${res.message}\x1b[0m`);
+      console.log(`[Thanh cong] ${res.message}`);
     } else {
-      console.log(`\x1b[31m✖ ${res.message}\x1b[0m`);
+      console.log(`[Loi] ${res.message}`);
     }
     await InputPrompt.pause();
   }
 
   private async terminateContract(): Promise<void> {
-    const id = await InputPrompt.ask('\nNhập mã hợp đồng cần kết thúc (VD: HD001): ');
-    const confirm = await InputPrompt.ask(`Bạn có chắc muốn kết thúc hợp đồng "${id}"? Phòng sẽ chuyển về TRỐNG (y/N): `);
+    const id = await InputPrompt.ask('\nNhap ma hop dong can ket thuc: ');
+    const confirm = await InputPrompt.ask(`Ket thuc hop dong "${id}"? Phong se chuyen ve TRONG (y/N): `);
     if (confirm.toLowerCase() === 'y') {
-      const reason = await InputPrompt.ask('Lý do kết thúc hợp đồng: ');
+      const reason = await InputPrompt.ask('Ly do ket thuc: ');
       const res = this.contractService.terminateContract(id, reason);
       if (res.success) {
-        console.log(`\x1b[32m✔ ${res.message}\x1b[0m`);
+        console.log(`[Thanh cong] ${res.message}`);
       } else {
-        console.log(`\x1b[31m✖ ${res.message}\x1b[0m`);
+        console.log(`[Loi] ${res.message}`);
       }
     }
     await InputPrompt.pause();
   }
 
   private async searchContract(): Promise<void> {
-    const kw = await InputPrompt.ask('\nNhập từ khóa tìm kiếm (Mã HĐ / Mã Phòng): ');
+    const kw = await InputPrompt.ask('\nNhap tu khoa tim kiem (Ma HD / Ma Phong): ');
     const results = this.contractService.searchContracts(kw);
     this.displayContractList(results);
     await InputPrompt.pause();
@@ -165,38 +163,36 @@ export class RentalFinanceView {
 
   private displayExpiringContracts(): void {
     const reports = this.reportService.getExpiringContractsReport(30);
-    console.log(`\n\x1b[1;33m--- CẢNH BÁO: HỢP ĐỒNG SẮP HẾT HẠN TRONG 30 NGÀY (${reports.length} hợp đồng) ---\x1b[0m`);
-    const headers = ['Mã HĐ', 'Số Phòng', 'Khách Thuê', 'Ngày Hết Hạn', 'Còn Lại', 'Tiền Cọc'];
+    console.log(`\n--- HOP DONG SAP HET HAN TRONG 30 NGAY (${reports.length} hop dong) ---`);
+    const headers = ['Ma HD', 'So Phong', 'Khach Thue', 'Ngay Het Han', 'Con Lai', 'Tien Coc'];
     const rows = reports.map(r => [
       r.contractId,
       r.roomNumber,
       r.customerNames,
       Formatter.formatDate(r.endDate),
-      `\x1b[31m${r.remainingDays} ngày\x1b[0m`,
+      `${r.remainingDays} ngay`,
       Formatter.formatCurrency(r.deposit)
     ]);
     Formatter.formatTable(headers, rows);
   }
 
-  // ==========================================
-  // 2. QUẢN LÝ HÓA ĐƠN & TÍNH TIỀN
-  // ==========================================
+  // 2. Menu hoa don
   public async handleInvoiceMenu(): Promise<void> {
     while (true) {
       console.clear();
-      console.log('\x1b[36m=========================================================\x1b[0m');
-      console.log('\x1b[1;33m               🧾 QUẢN LÝ HÓA ĐƠN HÀNG THÁNG            \x1b[0m');
-      console.log('\x1b[36m=========================================================\x1b[0m');
-      console.log(' [1] Danh sách tất cả hóa đơn');
-      console.log(' [2] Lập hóa đơn tiền phòng & dịch vụ tháng mới');
-      console.log(' [3] Xem chi tiết một hóa đơn');
-      console.log(' [4] Danh sách hóa đơn chưa thanh toán (công nợ)');
-      console.log(' [5] Hủy hóa đơn');
-      console.log(' [6] Tìm kiếm hóa đơn');
-      console.log(' [0] Quay lại Menu chính');
-      console.log('\x1b[36m---------------------------------------------------------\x1b[0m');
+      console.log('=========================================================');
+      console.log('                   QUAN LY HOA DON HANG THANG            ');
+      console.log('=========================================================');
+      console.log(' [1] Danh sach hoa don');
+      console.log(' [2] Lap hoa don tien phong & dich vu');
+      console.log(' [3] Xem chi tiet hoa don');
+      console.log(' [4] Danh sach hoa don chua thanh toan (cong no)');
+      console.log(' [5] Huy hoa don');
+      console.log(' [6] Tim kiem hoa don');
+      console.log(' [0] Quay lai menu chinh');
+      console.log('---------------------------------------------------------');
 
-      const choice = await InputPrompt.ask('👉 Nhập lựa chọn của bạn: ');
+      const choice = await InputPrompt.ask('Nhap lua chon: ');
       if (choice === '0') break;
 
       switch (choice) {
@@ -221,15 +217,15 @@ export class RentalFinanceView {
           await this.searchInvoice();
           break;
         default:
-          console.log('\x1b[31m⚠️ Lựa chọn không hợp lệ!\x1b[0m');
+          console.log('[Loi] Lua chon khong hop le.');
           await InputPrompt.pause();
       }
     }
   }
 
   private displayInvoiceList(invoices: any[]): void {
-    console.log(`\n\x1b[1m--- DANH SÁCH HÓA ĐƠN (${invoices.length} hóa đơn) ---\x1b[0m`);
-    const headers = ['Mã HĐN', 'Mã Hợp Đồng', 'Mã Phòng', 'Kỳ Thu', 'Tiền Phòng', 'Tiền Điện', 'Tiền Nước', 'TỔNG TIỀN', 'Trạng Thái'];
+    console.log(`\n--- DANH SACH HOA DON (${invoices.length} hoa don) ---`);
+    const headers = ['Ma HDN', 'Ma Hop Dong', 'Ma Phong', 'Ky Thu', 'Tien Phong', 'Tien Dien', 'Tien Nuoc', 'TONG TIEN', 'Trang Thai'];
     const rows = invoices.map(i => [
       i.id,
       i.contractId,
@@ -238,29 +234,28 @@ export class RentalFinanceView {
       Formatter.formatCurrency(i.roomRentAmount),
       Formatter.formatCurrency(i.electricityAmount),
       Formatter.formatCurrency(i.waterAmount),
-      `\x1b[1;32m${Formatter.formatCurrency(i.totalAmount)}\x1b[0m`,
-      i.status === InvoiceStatus.PAID ? '\x1b[32mĐÃ THANH TOÁN\x1b[0m' : (i.status === InvoiceStatus.UNPAID ? '\x1b[31mCHƯA THANH TOÁN\x1b[0m' : '\x1b[90mĐÃ HỦY\x1b[0m')
+      Formatter.formatCurrency(i.totalAmount),
+      i.status === InvoiceStatus.PAID ? 'DA THANH TOAN' : (i.status === InvoiceStatus.UNPAID ? 'CHUA THANH TOAN' : 'DA HUY')
     ]);
     Formatter.formatTable(headers, rows);
   }
 
   private async createInvoice(): Promise<void> {
-    console.log('\n\x1b[1;32m--- LẬP HÓA ĐƠN TIỀN PHÒNG & DỊCH VỤ ---\x1b[0m');
-    const contractId = await InputPrompt.ask('Nhập mã hợp đồng (VD: HD001): ');
-    const month = await InputPrompt.askNumber('Tháng tính tiền (1-12): ');
-    const year = await InputPrompt.askNumber('Năm tính tiền (VD: 2026): ');
+    console.log('\n--- LAP HOA DON TIEN PHONG & DICH VU ---');
+    const contractId = await InputPrompt.ask('Ma hop dong (VD: HD001): ');
+    const month = await InputPrompt.askNumber('Thang tinh tien (1-12): ');
+    const year = await InputPrompt.askNumber('Nam tinh tien (VD: 2026): ');
 
-    console.log('\n--- Chỉ số điện & nước ---');
-    const oldElectricity = await InputPrompt.askNumber('Chỉ số điện CŨ (kWh): ');
-    const newElectricity = await InputPrompt.askNumber('Chỉ số điện MỚI (kWh): ');
-    const oldWater = await InputPrompt.askNumber('Chỉ số nước CŨ (m³): ');
-    const newWater = await InputPrompt.askNumber('Chỉ số nước MỚI (m³): ');
+    console.log('--- Chi so dien & nuoc ---');
+    const oldElectricity = await InputPrompt.askNumber('Chi so dien CU (kWh): ');
+    const newElectricity = await InputPrompt.askNumber('Chi so dien MOI (kWh): ');
+    const oldWater = await InputPrompt.askNumber('Chi so nuoc CU (m3): ');
+    const newWater = await InputPrompt.askNumber('Chi so nuoc MOI (m3): ');
 
-    console.log('\n--- Phụ phí & Khuyến mãi (Tùy chọn) ---');
-    const surcharge = await InputPrompt.askNumber('Phụ phí phát sinh (mặc định 0 VNĐ): ', 0);
-    const discount = await InputPrompt.askNumber('Giảm giá / Chiết khấu (mặc định 0 VNĐ): ', 0);
+    const surcharge = await InputPrompt.askNumber('Phu phi phat sinh (mac dinh 0): ', 0);
+    const discount = await InputPrompt.askNumber('Giam gia (mac dinh 0): ', 0);
 
-    const tieredChoice = await InputPrompt.ask('Tính tiền điện theo biểu giá bậc thang EVN? (y/N - mặc định đơn giá kinh doanh): ');
+    const tieredChoice = await InputPrompt.ask('Tinh tien dien theo bac thang EVN? (y/N): ');
     const useTieredElectricity = tieredChoice.toLowerCase() === 'y';
 
     const res = this.invoiceService.createInvoice({
@@ -277,84 +272,82 @@ export class RentalFinanceView {
     });
 
     if (res.success && res.data) {
-      console.log(`\x1b[32m✔ ${res.message}\x1b[0m`);
-      console.log(`💰 Tổng số tiền hóa đơn: \x1b[1;33m${Formatter.formatCurrency(res.data.totalAmount)}\x1b[0m`);
+      console.log(`[Thanh cong] ${res.message}`);
+      console.log(`Tong tien: ${Formatter.formatCurrency(res.data.totalAmount)}`);
     } else {
-      console.log(`\x1b[31m✖ ${res.message}\x1b[0m`);
+      console.log(`[Loi] ${res.message}`);
       res.errors?.forEach(e => console.log(`   - ${e}`));
     }
     await InputPrompt.pause();
   }
 
   private async viewInvoiceDetail(): Promise<void> {
-    const id = await InputPrompt.ask('\nNhập mã hóa đơn cần xem (VD: INV001): ');
+    const id = await InputPrompt.ask('\nNhap ma hoa don can xem: ');
     const inv = this.invoiceService.getInvoiceById(id);
     if (!inv) {
-      console.log('\x1b[31m✖ Không tìm thấy hóa đơn!\x1b[0m');
+      console.log('[Loi] Khong tim thay hoa don.');
       await InputPrompt.pause();
       return;
     }
 
-    console.log('\n\x1b[1;36m=========================================================\x1b[0m');
-    console.log(`\x1b[1;33m          CHI TIẾT HÓA ĐƠN THÁNG ${inv.month}/${inv.year}        \x1b[0m`);
-    console.log('\x1b[1;36m=========================================================\x1b[0m');
-    console.log(` Mã hóa đơn: ${inv.id} | Hợp đồng: ${inv.contractId} | Phòng: ${inv.roomId}`);
-    console.log(` Trạng thái: ${inv.status === InvoiceStatus.PAID ? '\x1b[32mĐÃ THANH TOÁN\x1b[0m' : '\x1b[31mCHƯA THANH TOÁN\x1b[0m'}`);
+    console.log('\n=========================================================');
+    console.log(`            CHI TIET HOA DON THANG ${inv.month}/${inv.year}       `);
+    console.log('=========================================================');
+    console.log(` Ma hoa don: ${inv.id} | Hop dong: ${inv.contractId} | Phong: ${inv.roomId}`);
+    console.log(` Trang thai: ${inv.status === InvoiceStatus.PAID ? 'DA THANH TOAN' : 'CHUA THANH TOAN'}`);
     if (inv.paymentDate) {
-      console.log(` Ngày thanh toán: ${Formatter.formatDateTime(inv.paymentDate)}`);
+      console.log(` Ngay thanh toan: ${Formatter.formatDateTime(inv.paymentDate)}`);
     }
 
-    const headers = ['Khoản Mục', 'Chi Tiết / Chỉ Số', 'Thành Tiền (VNĐ)'];
+    const headers = ['Khoan Muc', 'Chi Tiet', 'Thanh Tien (VND)'];
     const rows = [
-      ['Tiền thuê phòng', '1 tháng', Formatter.formatCurrency(inv.roomRentAmount)],
-      ['Tiền điện', `${inv.newElectricity - inv.oldElectricity} kWh (${inv.oldElectricity} -> ${inv.newElectricity})`, Formatter.formatCurrency(inv.electricityAmount)],
-      ['Tiền nước', `${inv.newWater - inv.oldWater} m³ (${inv.oldWater} -> ${inv.newWater})`, Formatter.formatCurrency(inv.waterAmount)],
-      ['Internet / Wifi', 'Cáp quang tốc độ cao', Formatter.formatCurrency(inv.internetAmount)],
-      ['Vệ sinh & Rác', 'Phí dọn dẹp hàng tháng', Formatter.formatCurrency(inv.cleaningAmount)],
-      ['Phụ phí', 'Phí phát sinh', Formatter.formatCurrency(inv.surcharge)],
-      ['Giảm giá', 'Khuyến mãi / Giảm trừ', `-${Formatter.formatCurrency(inv.discount)}`],
-      ['TỔNG CỘNG', 'Số tiền cần thanh toán', `\x1b[1;32m${Formatter.formatCurrency(inv.totalAmount)}\x1b[0m`]
+      ['Tien thue phong', '1 thang', Formatter.formatCurrency(inv.roomRentAmount)],
+      ['Tien dien', `${inv.newElectricity - inv.oldElectricity} kWh (${inv.oldElectricity} -> ${inv.newElectricity})`, Formatter.formatCurrency(inv.electricityAmount)],
+      ['Tien nuoc', `${inv.newWater - inv.oldWater} m3 (${inv.oldWater} -> ${inv.newWater})`, Formatter.formatCurrency(inv.waterAmount)],
+      ['Internet / Wifi', 'Goi cuoc thang', Formatter.formatCurrency(inv.internetAmount)],
+      ['Ve sinh & Rac', 'Phi ve sinh', Formatter.formatCurrency(inv.cleaningAmount)],
+      ['Phu phi', 'Phat sinh', Formatter.formatCurrency(inv.surcharge)],
+      ['Giam gia', 'Khuyen mai', `-${Formatter.formatCurrency(inv.discount)}`],
+      ['TONG CONG', 'Tong can thanh toan', Formatter.formatCurrency(inv.totalAmount)]
     ];
     Formatter.formatTable(headers, rows);
     await InputPrompt.pause();
   }
 
   private async cancelInvoice(): Promise<void> {
-    const id = await InputPrompt.ask('\nNhập mã hóa đơn cần hủy (VD: INV001): ');
-    const confirm = await InputPrompt.ask(`Bạn có chắc muốn hủy hóa đơn "${id}"? (y/N): `);
+    const id = await InputPrompt.ask('\nNhap ma hoa don can huy: ');
+    const confirm = await InputPrompt.ask(`Huy hoa don "${id}"? (y/N): `);
     if (confirm.toLowerCase() === 'y') {
       const res = this.invoiceService.cancelInvoice(id);
       if (res.success) {
-        console.log(`\x1b[32m✔ ${res.message}\x1b[0m`);
+        console.log(`[Thanh cong] ${res.message}`);
       } else {
-        console.log(`\x1b[31m✖ ${res.message}\x1b[0m`);
+        console.log(`[Loi] ${res.message}`);
       }
     }
     await InputPrompt.pause();
   }
 
   private async searchInvoice(): Promise<void> {
-    const kw = await InputPrompt.ask('\nNhập từ khóa tìm kiếm (Mã HĐN / Mã HĐ / Mã Phòng): ');
+    const kw = await InputPrompt.ask('\nNhap tu khoa tim kiem (Ma HDN / Ma HD / Ma Phong): ');
     const results = this.invoiceService.searchInvoices(kw);
     this.displayInvoiceList(results);
     await InputPrompt.pause();
   }
 
-  // ==========================================
-  // 3. THANH TOÁN HÓA ĐƠN
-  // ==========================================
+  // 3. Menu thanh toan
   public async handlePaymentMenu(): Promise<void> {
     while (true) {
       console.clear();
-      console.log('\x1b[36m=========================================================\x1b[0m');
-      console.log('\x1b[1;33m               💳 THANH TOÁN HÓA ĐƠN                    \x1b[0m');
-      console.log('\x1b[36m=========================================================\x1b[0m');
-      console.log(' [1] Xem danh sách các hóa đơn chờ thanh toán');
-      console.log(' [2] Thực hiện thanh toán hóa đơn');
-      console.log(' [0] Quay lại Menu chính');
-      console.log('\x1b[36m---------------------------------------------------------\x1b[0m');
+      console.log('=========================================================');
+      console.log('                   THANH TOAN HOA DON                    ');
+      console.log('=========================================================');
+      console.log(' [1] Xem hoa don chua thanh toan');
+      console.log(' [2] Thanh toan hoa don');
+      console.log(' [0] Quay lai menu chinh');
+      console.log('---------------------------------------------------------');
 
-      const choice = await InputPrompt.ask('👉 Nhập lựa chọn của bạn: ');
+      const choice = await InputPrompt.ask('Nhap lua chon: ');
       if (choice === '0') break;
 
       switch (choice) {
@@ -366,75 +359,73 @@ export class RentalFinanceView {
           await this.processPayment();
           break;
         default:
-          console.log('\x1b[31m⚠️ Lựa chọn không hợp lệ!\x1b[0m');
+          console.log('[Loi] Lua chon khong hop le.');
           await InputPrompt.pause();
       }
     }
   }
 
   private async processPayment(): Promise<void> {
-    const id = await InputPrompt.ask('\nNhập mã hóa đơn cần thanh toán (VD: INV001): ');
+    const id = await InputPrompt.ask('\nNhap ma hoa don can thanh toan (VD: INV001): ');
     const inv = this.invoiceService.getInvoiceById(id);
     if (!inv) {
-      console.log('\x1b[31m✖ Không tìm thấy hóa đơn!\x1b[0m');
+      console.log('[Loi] Khong tim thay hoa don.');
       await InputPrompt.pause();
       return;
     }
 
     if (inv.status === InvoiceStatus.PAID) {
-      console.log(`\x1b[33m⚠️ Hóa đơn này đã được thanh toán vào ngày ${Formatter.formatDateTime(inv.paymentDate)}!\x1b[0m`);
+      console.log(`[Thong bao] Hoa don nay da duoc thanh toan truoc do.`);
       await InputPrompt.pause();
       return;
     }
 
-    console.log(`\nKhách cần thanh toán số tiền: \x1b[1;32m${Formatter.formatCurrency(inv.totalAmount)}\x1b[0m`);
-    console.log('Phương thức thanh toán: 1. Tiền mặt | 2. Chuyển khoản ngân hàng | 3. Quét mã QR');
-    const pChoice = await InputPrompt.ask('Chọn phương thức (1-3): ');
+    console.log(`So tien can thanh toan: ${Formatter.formatCurrency(inv.totalAmount)}`);
+    console.log('Phuong thuc: 1. Tien mat | 2. Chuyen khoan | 3. QR Code');
+    const pChoice = await InputPrompt.ask('Chon phuong thuc (1-3): ');
     const methods: Record<string, string> = {
       '1': 'Tiền mặt',
-      '2': 'Chuyển khoản ngân hàng',
-      '3': 'Quét mã QR'
+      '2': 'Chuyển khoản',
+      '3': 'QR Code'
     };
     const paymentMethod = methods[pChoice] || 'Tiền mặt';
     const currentUser = this.authService.getCurrentUser();
 
     const res = this.paymentService.payInvoice(id, paymentMethod, currentUser?.fullName);
     if (res.success && res.data) {
-      console.log('\n\x1b[1;32m=========================================================\x1b[0m');
-      console.log('\x1b[1;32m               🎉 BIÊN LAI THU TIỀN THÀNH CÔNG           \x1b[0m');
-      console.log('\x1b[1;32m=========================================================\x1b[0m');
-      console.log(` Mã biên lai: ${res.data.receiptId}`);
-      console.log(` Mã hóa đơn: ${res.data.invoiceId} (Phòng: ${res.data.roomId} - T${res.data.month}/${res.data.year})`);
-      console.log(` Số tiền thu: \x1b[1;33m${Formatter.formatCurrency(res.data.totalAmount)}\x1b[0m`);
-      console.log(` Hình thức: ${res.data.paymentMethod}`);
-      console.log(` Người thực hiện thu: ${res.data.paidBy || 'Thu ngân'}`);
-      console.log(` Thời gian thanh toán: ${Formatter.formatDateTime(res.data.paidAt)}`);
-      console.log('\x1b[1;32m=========================================================\x1b[0m');
+      console.log('\n=========================================================');
+      console.log('                 BIEN LAI THU TIEN                       ');
+      console.log('=========================================================');
+      console.log(` Ma bien lai: ${res.data.receiptId}`);
+      console.log(` Ma hoa don: ${res.data.invoiceId} (Phong: ${res.data.roomId} - T${res.data.month}/${res.data.year})`);
+      console.log(` So tien: ${Formatter.formatCurrency(res.data.totalAmount)}`);
+      console.log(` Hinh thuc: ${res.data.paymentMethod}`);
+      console.log(` Nguoi thu: ${res.data.paidBy || 'Thu ngân'}`);
+      console.log(` Thoi gian: ${Formatter.formatDateTime(res.data.paidAt)}`);
+      console.log('=========================================================');
     } else {
-      console.log(`\x1b[31m✖ ${res.message}\x1b[0m`);
+      console.log(`[Loi] ${res.message}`);
     }
     await InputPrompt.pause();
   }
 
-  // ==========================================
-  // 4. BÁO CÁO DOANH THU & THỐNG KÊ
-  // ==========================================
+  // 4. Menu bao cao
   public async handleReportMenu(): Promise<void> {
     while (true) {
       console.clear();
-      console.log('\x1b[36m=========================================================\x1b[0m');
-      console.log('\x1b[1;33m               📊 BÁO CÁO DOANH THU & THỐNG KÊ          \x1b[0m');
-      console.log('\x1b[36m=========================================================\x1b[0m');
-      console.log(' [1] Báo cáo Tổng quan Tình hình Hoạt động');
-      console.log(' [2] Thống kê Doanh thu theo Tháng trong năm');
-      console.log(' [3] Top 5 Phòng có doanh thu cao nhất');
-      console.log(' [4] Top 5 Khách hàng chi tiêu nhiều nhất');
-      console.log(' [5] Báo cáo Công nợ & Hóa đơn chưa thu');
-      console.log(' [6] Xuất toàn bộ Báo cáo ra file JSON (Export Report)');
-      console.log(' [0] Quay lại Menu chính');
-      console.log('\x1b[36m---------------------------------------------------------\x1b[0m');
+      console.log('=========================================================');
+      console.log('                   BAO CAO DOANH THU                     ');
+      console.log('=========================================================');
+      console.log(' [1] Bao cao tong quan');
+      console.log(' [2] Doanh thu theo thang trong nam');
+      console.log(' [3] Top 5 phong doanh thu cao nhat');
+      console.log(' [4] Top 5 khach hang chi tieu nhieu nhat');
+      console.log(' [5] Bao cao cong no chua thu');
+      console.log(' [6] Xuat bao cao ra file JSON');
+      console.log(' [0] Quay lai menu chinh');
+      console.log('---------------------------------------------------------');
 
-      const choice = await InputPrompt.ask('👉 Nhập lựa chọn của bạn: ');
+      const choice = await InputPrompt.ask('Nhap lua chon: ');
       if (choice === '0') break;
 
       switch (choice) {
@@ -461,7 +452,7 @@ export class RentalFinanceView {
           await this.exportReports();
           break;
         default:
-          console.log('\x1b[31m⚠️ Lựa chọn không hợp lệ!\x1b[0m');
+          console.log('[Loi] Lua chon khong hop le.');
           await InputPrompt.pause();
       }
     }
@@ -469,43 +460,39 @@ export class RentalFinanceView {
 
   private displayOverviewReport(): void {
     const report = this.reportService.getOverviewReport();
-    console.log('\n\x1b[1;33m=========================================================\x1b[0m');
-    console.log('\x1b[1;33m             BÁO CÁO TỔNG QUAN HỆ THỐNG PHÒNG TRỌ        \x1b[0m');
-    console.log('\x1b[1;33m=========================================================\x1b[0m');
-
-    const headers = ['Chỉ Số Thống Kê', 'Giá Trị'];
+    console.log('\n--- BAO CAO TONG QUAN ---');
+    const headers = ['Chi So', 'Gia Tri'];
     const rows = [
-      ['Tổng số phòng trọ', `${report.totalRooms} phòng`],
-      ['Số phòng đang có khách thuê', `\x1b[32m${report.rentedRooms} phòng\x1b[0m`],
-      ['Số phòng còn trống', `\x1b[36m${report.availableRooms} phòng\x1b[0m`],
-      ['Số phòng đang bảo trì', `\x1b[31m${report.maintenanceRooms} phòng\x1b[0m`],
-      ['TỶ LỆ LẤP ĐẦY PHÒNG', `\x1b[1;32m${report.occupancyRate}%\x1b[0m`],
-      ['Tổng số khách thuê', `${report.totalCustomers} khách`],
-      ['Số hợp đồng đang có hiệu lực', `${report.activeContracts} hợp đồng`],
-      ['Tổng số hóa đơn đã lập', `${report.totalInvoices} hóa đơn`],
-      ['Số hóa đơn đã thanh toán', `\x1b[32m${report.paidInvoices} hóa đơn\x1b[0m`],
-      ['Số hóa đơn chưa thanh toán', `\x1b[31m${report.unpaidInvoices} hóa đơn\x1b[0m`],
-      ['TỔNG DOANH THU THỰC THU', `\x1b[1;32m${Formatter.formatCurrency(report.totalRevenue)}\x1b[0m`],
-      ['TỔNG CÔNG NỢ CHƯA THU', `\x1b[1;31m${Formatter.formatCurrency(report.totalOutstanding)}\x1b[0m`]
+      ['Tong so phong', `${report.totalRooms} phong`],
+      ['So phong da thue', `${report.rentedRooms} phong`],
+      ['So phong trong', `${report.availableRooms} phong`],
+      ['So phong bao tri', `${report.maintenanceRooms} phong`],
+      ['Ty le lap day', `${report.occupancyRate}%`],
+      ['Tong so khach thue', `${report.totalCustomers} khach`],
+      ['Hop dong dang hieu luc', `${report.activeContracts} hop dong`],
+      ['Hoa don da thanh toan', `${report.paidInvoices} hoa don`],
+      ['Hoa don chua thanh toan', `${report.unpaidInvoices} hoa don`],
+      ['Tong doanh thu thuc thu', Formatter.formatCurrency(report.totalRevenue)],
+      ['Tong cong no chua thu', Formatter.formatCurrency(report.totalOutstanding)]
     ];
     Formatter.formatTable(headers, rows);
   }
 
   private async displayRevenueByMonth(): Promise<void> {
     const currentYear = new Date().getFullYear();
-    const yearInput = await InputPrompt.ask(`\nNhập năm cần xem báo cáo [${currentYear}]: `);
+    const yearInput = await InputPrompt.ask(`\nNhap nam can xem [${currentYear}]: `);
     const year = yearInput ? Number(yearInput) : currentYear;
 
     const reports = this.reportService.getRevenueByMonth(year);
-    console.log(`\n\x1b[1;33m--- BÁO CÁO DOANH THU THEO THÁNG TRONG NĂM ${year} ---\x1b[0m`);
-    const headers = ['Kỳ Báo Cáo', 'Tiền Phòng', 'Tiền Điện', 'Tiền Nước', 'Dịch Vụ Khác', 'TỔNG DOANH THU'];
+    console.log(`\n--- DOANH THU THEO THANG NĂM ${year} ---`);
+    const headers = ['Ky', 'Tien Phong', 'Tien Dien', 'Tien Nuoc', 'Dich Vu Khac', 'Tong Doanh Thu'];
     const rows = reports.map(r => [
       r.period,
       Formatter.formatCurrency(r.roomRentRevenue),
       Formatter.formatCurrency(r.electricityRevenue),
       Formatter.formatCurrency(r.waterRevenue),
       Formatter.formatCurrency(r.serviceRevenue),
-      `\x1b[1;32m${Formatter.formatCurrency(r.totalRevenue)}\x1b[0m`
+      Formatter.formatCurrency(r.totalRevenue)
     ]);
     Formatter.formatTable(headers, rows);
     await InputPrompt.pause();
@@ -513,74 +500,74 @@ export class RentalFinanceView {
 
   private displayTopRooms(): void {
     const topRooms = this.reportService.getTopRooms(5);
-    console.log('\n\x1b[1;33m--- TOP 5 PHÒNG TRỌ CÓ DOANH THU CAO NHẤT ---\x1b[0m');
-    const headers = ['Hạng', 'Mã Phòng', 'Số Phòng', 'Số Hóa Đơn Thu', 'Tổng Doanh Thu'];
+    console.log('\n--- TOP 5 PHONG DOANH THU CAO NHAT ---');
+    const headers = ['Hang', 'Ma Phong', 'So Phong', 'So Hoa Don', 'Tong Doanh Thu'];
     const rows = topRooms.map((r, index) => [
       `#${index + 1}`,
       r.roomId,
-      `Phòng ${r.roomNumber}`,
-      `${r.invoiceCount} hóa đơn`,
-      `\x1b[1;32m${Formatter.formatCurrency(r.totalRevenue)}\x1b[0m`
+      `Phong ${r.roomNumber}`,
+      `${r.invoiceCount}`,
+      Formatter.formatCurrency(r.totalRevenue)
     ]);
     Formatter.formatTable(headers, rows);
   }
 
   private displayTopCustomers(): void {
     const topCust = this.reportService.getTopCustomers(5);
-    console.log('\n\x1b[1;33m--- TOP 5 KHÁCH HÀNG CHI TIÊU NHIỀU NHẤT ---\x1b[0m');
-    const headers = ['Hạng', 'Mã KH', 'Họ Và Tên', 'Số Điện Thoại', 'Tổng Chi Tiêu'];
+    console.log('\n--- TOP 5 KHACH HANG CHI TIEU NHIEU NHAT ---');
+    const headers = ['Hang', 'Ma KH', 'Ho Ten', 'So Dien Thoai', 'Tong Chi'];
     const rows = topCust.map((c, index) => [
       `#${index + 1}`,
       c.customerId,
       c.fullName,
       c.phone,
-      `\x1b[1;32m${Formatter.formatCurrency(c.totalSpent)}\x1b[0m`
+      Formatter.formatCurrency(c.totalSpent)
     ]);
     Formatter.formatTable(headers, rows);
   }
 
   private displayDebtReport(): void {
     const debts = this.reportService.getUnpaidInvoicesReport();
-    console.log(`\n\x1b[1;31m--- BÁO CÁO CÔNG NỢ / HÓA ĐƠN CHƯA THU (${debts.length} hóa đơn) ---\x1b[0m`);
-    const headers = ['Mã HĐN', 'Phòng', 'Khách Thuê', 'Kỳ Hóa Đơn', 'Hạn Nộp', 'Số Tiền Nợ'];
+    console.log(`\n--- DANH SACH CONG NO (${debts.length} hoa don) ---`);
+    const headers = ['Ma HDN', 'Phong', 'Khach Thue', 'Ky', 'Han Nop', 'So Tien No'];
     const rows = debts.map(d => [
       d.invoiceId,
       d.roomNumber,
       d.customerNames,
       `T${d.month}/${d.year}`,
       d.dueDate,
-      `\x1b[1;31m${Formatter.formatCurrency(d.totalAmount)}\x1b[0m`
+      Formatter.formatCurrency(d.totalAmount)
     ]);
     Formatter.formatTable(headers, rows);
   }
 
   private async exportReports(): Promise<void> {
-    console.log('\n\x1b[1;32m--- XUẤT BÁO CÁO RA FILE JSON ---\x1b[0m');
-    console.log('1. Xuất Báo cáo Tổng quan (overview_report.json)');
-    console.log('2. Xuất Báo cáo Doanh thu chi tiết (revenue_report.json)');
-    console.log('3. Xuất Báo cáo Công nợ (debt_report.json)');
-    console.log('4. Xuất Báo cáo Hợp đồng sắp hết hạn (expiring_contracts_report.json)');
-    console.log('5. Xuất TẤT CẢ các báo cáo');
+    console.log('\n--- XUAT BAO CAO JSON ---');
+    console.log('1. Bao cao Tong quan');
+    console.log('2. Bao cao Doanh thu');
+    console.log('3. Bao cao Cong no');
+    console.log('4. Bao cao Hop dong sap het han');
+    console.log('5. Xuat tat ca');
 
-    const choice = await InputPrompt.ask('Chọn loại báo cáo (1-5): ');
+    const choice = await InputPrompt.ask('Chon loai (1-5): ');
     if (choice === '1') {
       const res = this.reportService.exportReportToJson('overview');
-      console.log(`\x1b[32m✔ ${res.message}\x1b[0m`);
+      console.log(`[Thanh cong] ${res.message}`);
     } else if (choice === '2') {
       const res = this.reportService.exportReportToJson('revenue');
-      console.log(`\x1b[32m✔ ${res.message}\x1b[0m`);
+      console.log(`[Thanh cong] ${res.message}`);
     } else if (choice === '3') {
       const res = this.reportService.exportReportToJson('debt');
-      console.log(`\x1b[32m✔ ${res.message}\x1b[0m`);
+      console.log(`[Thanh cong] ${res.message}`);
     } else if (choice === '4') {
       const res = this.reportService.exportReportToJson('expiring');
-      console.log(`\x1b[32m✔ ${res.message}\x1b[0m`);
+      console.log(`[Thanh cong] ${res.message}`);
     } else if (choice === '5') {
       this.reportService.exportReportToJson('overview');
       this.reportService.exportReportToJson('revenue');
       this.reportService.exportReportToJson('debt');
       this.reportService.exportReportToJson('expiring');
-      console.log('\x1b[32m✔ Đã xuất tất cả 4 loại báo cáo vào thư mục reports/ thành công!\x1b[0m');
+      console.log('[Thanh cong] Da xuat tat ca bao cao vao thu muc reports/');
     }
     await InputPrompt.pause();
   }
