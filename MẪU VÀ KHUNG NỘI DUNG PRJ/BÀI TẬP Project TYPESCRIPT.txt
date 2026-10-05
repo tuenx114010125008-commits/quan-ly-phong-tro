@@ -1,0 +1,521 @@
+BÀI TẬP Project NHÓM - DỰ ÁN TYPESCRIPT CONSOLETHÔNG BÁO CHUNG
+Làm việc nhóm 2-3 người (khuyến khích 3 người)
+Vận dụng toàn bộ kiến thức TypeScript cơ bản đã học vào một dự án thực tế hoàn chỉnh, có phân chia công việc rõ ràng giữa các thành viên.
+Giai đoạn 1 (Buổi 1-6): Học và làm hết các video về TypeScript, ôn lại cho chắc
+Giai đoạn 2 (Buổi 7 đến hết): Tập trung làm project
+TypeScript (strict mode)
+Node.js + ts-node (ứng dụng console/terminal)
+TỰ CHỌN (xem phần gợi ý đề tài bên dưới)
+Báo cáo tiến độ định kỳ: cứ sau 2 buổi học phải báo cáo project một lần
+Nếu không thấy có sự thay đổi theo từng ngày thì nhóm sẽ KHÔNG được bảo vệ
+Nộp bản cứng cho Phòng Giáo vụ (đóng bìa gọn gàng)
+Bảo vệ project trực tiếp trong 1 buổi (15-20 phút/nhóm)
+Cả thành viên trong nhóm đều phải tham gia bảo vệ
+Giảng viên có thể hỏi bất kỳ thành viên nào về bất kỳ phần code nào
+TẤT CẢ nội dung trình bày phải là TIẾNG ANH (không được nửa Anh nửa Việt)
+Phải hoàn thiện project TRƯỚC deadline khoảng 5 ngày
+Phải sử dụng công cụ quản lý dự án (Trello, Git)
+Đối với bản slide: các sơ đồ phải export ra ảnh, KHÔNG chụp màn hình
+Phải viết unit test đầy đủ
+Đến sớm 30 phút trước buổi bảo vệ, trang phục gọn gàng lịch sự
+Chuẩn bị máy tính chu đáo
+Đọc kỹ tất cả dặn dò, comment "đã đọc kỹ" xuống dưới để thầy biết
+Đề tài phải theo mẫu slide đính kèm, KHÔNG được tự ý nghĩ ra mẫu khác
+Không được bỏ bất kỳ nội dung nào trong mẫu slide
+Tổng số trang file thuyết trình tối thiểu 50 trang
+Sau khi đã có nhóm thì KHÔNG được tách nhóm
+Các nhóm bảo vệ đầu tiên (2-3 nhóm đầu) sẽ bị hỏi rất kỹ, cần chuẩn bị tinh thần
+Các sơ đồ trong bài thuyết trình sẽ bị hỏi rất kỹ, cần hiểu rõ
+Kết thúc bài thuyết trình nên có câu cảm ơn thầy cô
+KIẾN THỨC YÊU CẦU
+Trước khi bắt đầu, cả thành viên PHẢI nắm vững:Kiểu dữ liệu: string, number, boolean, null, undefined, any, unknown, never, voidKiểu phức tạp: Array, Tuple, Object, Enum, Union, Intersection, Literal typeFunction: tham số, return type, optional, default, rest, overloadInterface và Type Alias: định nghĩa, kế thừa, so sánhClass: access modifier (public, private, protected, readonly), constructor, getter/setter, kế thừa, abstract class, implement interfaceGenerics: generic function, generic class, generic constraintModule: import / export (named và default)Utility Types: Partial, Pick, Omit, Readonly, RecordType Narrowing: typeof, instanceof, in, discriminated unionMÔ TẢ DỰ ÁN
+Nhóm tự chọn một đề tài và xây dựng một hệ thống quản lý chạy trên bằng TypeScript.
+Hệ thống phải có đầy đủ 3 nhóm chức năng chính:Quản lý thực thể chính (CRUD: thêm, xóa, sửa, tìm kiếm)Nghiệp vụ đặc thù của đề tài (ví dụ: mượn/trả sách, đặt hàng, đăng ký khóa học...)Báo cáo và thống kê (tổng quan, top, xu hướng, xuất dữ liệu)
+Ngoài ra hệ thống cần có:
+Phân quyền người dùng (ít nhất 3 role)
+Ghi log các hoạt động quan trọng
+Validate dữ liệu đầu vào
+Format và in kết quả đẹp trên console
+Unit test đầy đủ
+Hệ thống KHÔNG cần giao diện đồ họa, KHÔNG cần website, KHÔNG cần deploy hosting. Chỉ chạy trên console và in ra kết quả rõ ràng.GỢI Ý ĐỀ TÀI
+Nhóm có thể chọn 1 trong các đề tài sau, HOẶC tự nghĩ đề tài khác miễn là đáp ứng đủ 3 nhóm chức năng ở trên. Đề tài ngoài danh sách cần gửi giảng viên duyệt trước ngày thứ 2.
+Thực thể chính: Sách, Thành viên
+Nghiệp vụ: Mượn sách, trả sách, gia hạn, tính phạt quá hạn, đánh dấu mất sách
+Báo cáo: Top sách hot, top thành viên tích cực, sách quá hạn, thống kê theo thể loại
+Thực thể chính: Sản phẩm, Khách hàng, Đơn hàng
+Nghiệp vụ: Tạo đơn, thanh toán, hoàn trả, áp mã giảm giá, tính thuế
+Báo cáo: Doanh thu theo ngày/tháng, top sản phẩm bán chạy, top khách hàng VIP
+Thực thể chính: Khóa học, Học viên, Giảng viên
+Nghiệp vụ: Đăng ký khóa học, hoàn thành bài học, chấm điểm, cấp chứng chỉ
+Báo cáo: Tỷ lệ hoàn thành, top khóa học, top học viên xuất sắc
+Thực thể chính: Bệnh nhân, Bác sĩ, Lịch hẹn
+Nghiệp vụ: Đặt lịch, khám bệnh, kê đơn, thanh toán viện phí
+Báo cáo: Số bệnh nhân theo khoa, doanh thu, top bác sĩ
+Thực thể chính: Phòng, Khách hàng, Đặt phòng
+Nghiệp vụ: Đặt phòng, check-in, check-out, tính tiền, dịch vụ thêm
+Báo cáo: Tỷ lệ lấp phòng, doanh thu, top khách hàng
+Thực thể chính: Nhân viên, Phòng ban, Chấm công
+Nghiệp vụ: Tuyển dụng, chấm công, tính lương, nghỉ phép
+Báo cáo: Bảng lương, thống kê chấm công, top nhân viên xuất sắc
+Thực thể chính: Sản phẩm, Nhà cung cấp, Phiếu nhập/xuất
+Nghiệp vụ: Nhập kho, xuất kho, kiểm kê, cảnh báo hết hàng
+Báo cáo: Tồn kho, top sản phẩm nhập/xuất, cảnh báo sắp hết
+Thực thể chính: Giao dịch, Danh mục, Ví
+Nghiệp vụ: Thêm giao dịch thu/chi, phân loại, đặt ngân sách, cảnh báo vượt
+Báo cáo: Tổng thu/chi theo tháng, top danh mục chi nhiều, biểu đồ xu hướng
+Thực thể chính: Đội, Cầu thủ, Trận đấu
+Nghiệp vụ: Đăng ký đội, xếp lịch, ghi kết quả, tính điểm xếp hạng
+Báo cáo: Bảng xếp hạng, top cầu thủ ghi bàn, thống kê đối đầu
+Thực thể chính: Ảnh, Album, Người dùng
+Nghiệp vụ: Upload ảnh, tạo album, chia sẻ, tag, like, comment
+Báo cáo: Top ảnh nhiều like, top album, thống kê theo tag
+CẤU TRÚC THƯ MỤC DỰ ÁN
+<nhom-ten>_project/
+├── src/
+│ ├── models/ [Thành viên A]
+│ │ ├── <entity-1>.model.ts
+│ │ ├── <entity-2>.model.ts
+│ │ ├── <entity-3>.model.ts
+│ │ └── user.model.ts
+│ ├── services/ [Chia theo 3 thành viên]
+│ │ ├── <entity-1>.service.ts [Thành viên A]
+│ │ ├── <entity-2>.service.ts [Thành viên B]
+│ │ ├── <entity-3>.service.ts [Thành viên B]
+│ │ └── report.service.ts [Thành viên C]
+│ ├── repositories/
+│ │ └── in-memory.repository.ts [Thành viên B]
+│ ├── utils/
+│ │ ├── validator.ts [Thành viên C]
+│ │ ├── formatter.ts [Thành viên C]
+│ │ ├── logger.ts [Thành viên C]
+│ │ └── id-generator.ts [Thành viên B]
+│ ├── types/
+│ │ └── common.types.ts [Cả nhóm thống nhất]
+│ ├── constants/
+│ │ └── app.constants.ts [Cả nhóm thống nhất]
+│ └── index.ts [Thành viên C - tích hợp]
+├── tests/ [Bắt buộc - Unit test]
+│ ├── services/
+│ ├── utils/
+│ └── models/
+├── docs/
+│ ├── README.md [Tiếng Anh]
+│ ├── WORKLOG.md [Tiếng Anh]
+│ ├── DEMO.md [Tiếng Anh]
+│ ├── SLIDES.pdf [Theo mẫu đính kèm, tiếng Anh]
+│ └── THESIS.pdf [File thuyết trình, tối thiểu 50 trang]
+├── trello-export/ [Ảnh chụp Trello board]
+├── tsconfig.json
+├── jest.config.js
+├── package.json
+├── .gitignore
+└── .eslintrc.json [Bonus]PHÂN CHIA CÔNG VIỆC
+Nguyên tắc: mỗi thành viên phụ trách một nhóm thực thể và nghiệp vụ liên quan, đảm bảo khối lượng tương đương.THÀNH VIÊN A - "MODEL & ENTITY MANAGER"
+Định nghĩa toàn bộ model và quản lý nghiệp vụ thực thể chính thứ nhất.
+
+
+export type ID = string;
+export type UserRole = "ADMIN" | "MANAGER" | "STAFF";
+export interface BaseEntity {
+id: ID;
+createdAt: Date;
+updatedAt: Date;
+}
+export interface ApiResponse<T> {
+success: boolean;
+data?: T;
+message: string;
+timestamp: Date;
+}
+
+Ví dụ đề tài thư viện:
+book.model.ts: interface Book extends BaseEntity với title, author, isbn, category, totalCopies, availableCopies, status. Class BookEntity với getter isAvailable, method getInfo().
+member.model.ts: interface Member extends BaseEntity với name, email, phone, membershipType, maxBorrowLimit, borrowedBookIds, isActive. Class MemberEntity với canBorrowMore(), getInfo().
+borrow-record.model.ts: interface BorrowRecord extends BaseEntity với bookId, memberId, borrowedAt, dueDate, returnedAt, status, fine. Class BorrowRecordEntity với isOverdue(), calculateFine(), getInfo().
+user.model.ts: interface User extends BaseEntity với username, password, role, memberId, lastLoginAt. Class UserEntity với hasPermission(), getInfo().
+Ví dụ BookService:
+Class BookService:
+repository: InMemoryRepository<Book>
+Các method:
+addBook(data: Omit<Book, "id" | "createdAt" | "updatedAt">): ApiResponse<Book>
+updateBook(id: ID, data: Partial<Book>): ApiResponse<Book>
+deleteBook(id: ID): ApiResponse<boolean>
+findById(id: ID): Book | undefined
+findByIsbn(isbn: string): Book | undefined
+searchBooks(keyword: string): Book[]
+findByCategory(category: string): Book[]
+getAllBooks(): Book[]
+decreaseAvailable(id: ID): boolean
+increaseAvailable(id: ID): boolean
+Tất cả interface/class phải có JSDoc comment
+Không dùng any
+Dùng readonly cho field không đổi
+Export đầy đủ
+Validate input với utils/validator.ts
+THÀNH VIÊN B - "REPOSITORY & WORKFLOW MANAGER"
+Xây dựng repository generic, quản lý thực thể phụ và nghiệp vụ đặc thù.
+
+
+Generic class InMemoryRepository<T extends BaseEntity>:
+private items: Map<ID, T>
+getAll(): T[]
+getById(id: ID): T | undefined
+create(item: T): T
+update(id: ID, data: Partial<T>): T | undefined
+delete(id: ID): boolean
+exists(id: ID): boolean
+count(): number
+find(predicate: (item: T) => boolean): T[]
+clear(): void
+Class IDGenerator:
+static generate(prefix: string): string
+static reset(prefix: string): void
+Class MemberService:
+repository: InMemoryRepository<Member>
+registerMember(data): ApiResponse<Member>
+updateMember(id: ID, data: Partial<Member>): ApiResponse<Member>
+deactivateMember(id: ID): ApiResponse<boolean>
+findById(id: ID): Member | undefined
+findByEmail(email: string): Member | undefined
+searchMembers(keyword: string): Member[]
+getActiveMembers(): Member[]
+getAllMembers(): Member[]
+Class BorrowService:
+bookService: BookService
+memberService: MemberService
+recordRepo: InMemoryRepository<BorrowRecord>
+Constants:
+BORROW_DAYS = 14
+FINE_PER_DAY = 5000
+borrowBook(memberId: ID, bookId: ID): ApiResponse<BorrowRecord>
+returnBook(recordId: ID): ApiResponse<BorrowRecord>
+renewBook(recordId: ID, extraDays: number): ApiResponse<BorrowRecord>
+getRecordsByMember(memberId: ID): BorrowRecord[]
+getActiveRecords(): BorrowRecord[]
+getOverdueRecords(): BorrowRecord[]
+markAsLost(recordId: ID): ApiResponse<BorrowRecord>
+THÀNH VIÊN C - "REPORT, UTILS & INTEGRATION"
+Xây dựng utils, service thống kê, tích hợp hệ thống, viết unit test.
+
+
+Class Validator với static methods:
+isEmail(value: string): boolean
+isPhone(value: string): boolean
+isNotEmpty(value: string): boolean
+isPositiveNumber(value: number): boolean
+isNonNegativeNumber(value: number): boolean
+isInRange(value: number, min: number, max: number): boolean
+isDateInFuture(date: Date): boolean
+isDateInPast(date: Date): boolean
+validate<Entity>(data: unknown): { valid: boolean; errors: string[] }
+Class Formatter:
+formatCurrency(amount: number): string
+formatDate(date: Date): string
+formatDateTime(date: Date): string
+formatEntityInfo(entity): string
+formatTable<T>(headers: string[], rows: T[][]): string
+Enum LogLevel: DEBUG, INFO, WARN, ERROR
+Interface LogEntry:
+level: LogLevel
+message: string
+timestamp: Date
+context?: unknown
+Class Logger:
+static logLevel: LogLevel = LogLevel.INFO
+static logs: LogEntry[] = []
+debug/info/warn/error(message: string, context?: unknown): void
+getLogs(level?: LogLevel): LogEntry[]
+clearLogs(): void
+setLevel(level: LogLevel): void
+Class ReportService:
+<entity-1>Service
+<entity-2>Service
+<workflow>Service
+getStatistics(): object tổng quan
+getTop<Entity>(limit: number): { item: T; count: number }[]
+getTop<Member>(limit: number): { member: T; count: number }[]
+getOverdueReport(): mảng chi tiết
+getCategoryStatistics(): { category: string; count: number }[]
+getMonthlyStatistics(year: number): { month: number; count: number }[]
+exportReport(format: "TEXT" | "JSON"): string
+Các hằng số dùng chung:
+BORROW_DAYS = 14
+FINE_PER_DAY = 5000
+MAX_RENEW_COUNT = 1
+MAX_RENEW_DAYS = 7
+MEMBERSHIP_LIMITS = { BASIC: 3, PREMIUM: 5, VIP: 10 }
+Import tất cả services, models, utils
+Viết hàm main() chạy demo đầy đủ:
+BƯỚC 1: Khởi tạo services
+BƯỚC 2: Seed dữ liệu mẫu
+BƯỚC 3: Demo nghiệp vụ (cả thành công và thất bại)
+BƯỚC 4: In báo cáo
+BƯỚC 5: In log
+BƯỚC 6: Export report ra file JSON
+
+Tạo thư mục tests/ với các file test:
+tests/
+├── services/
+│ ├── <entity-1>.service.test.ts
+│ ├── <workflow>.service.test.ts
+│ └── report.service.test.ts
+├── utils/
+│ ├── validator.test.ts
+│ ├── formatter.test.ts
+│ └── logger.test.ts
+└── models/
+└── <entity-1>.model.test.ts
+Mỗi service phải có ít nhất 5 test case bao gồm:
+Test case thành công (happy path)
+Test case thất bại (error case)
+Test case edge case (giá trị biên)
+Test case validation
+Test case business logic
+Chạy test bằng lệnh: npm test
+CÁC TÍNH NĂNG BẮT BUỘC
+Thêm bản ghi mới (validate dữ liệu đầu vào)
+Cập nhật thông tin
+Xóa (kiểm tra ràng buộc trước khi xóa)
+Tìm kiếm theo nhiều tiêu chí
+Lọc theo thuộc tính
+Đăng ký mới (validate email, phone...)
+Cập nhật thông tin
+Vô hiệu hóa / kích hoạt
+Tìm kiếm
+Tối thiểu 5 nghiệp vụ chính của đề tài
+Bao gồm cả trường hợp thành công và thất bại
+Xử lý edge case đầy đủ
+Tính toán các chỉ số liên quan
+Thống kê tổng quan hệ thống
+Top N theo tiêu chí
+Báo cáo vi phạm / cảnh báo
+Thống kê theo danh mục
+Thống kê theo thời gian
+Export báo cáo ra JSON
+Validator cho mọi input
+Formatter in bảng đẹp trên console
+Logger ghi lại mọi hành động
+ID generator tự động
+Test cho tất cả service
+Test cho tất cả utils
+Test cho model (getter, method)
+Độ phủ test tối thiểu 70%
+Trello board với đầy đủ cột: Backlog, To Do, In Progress, Review, Done
+Git với commit history rõ ràng, có branch, pull request
+Báo cáo tiến độ mỗi 2 buổi học
+QUY TRÌNH LÀM VIỆC NHÓMGiai đoạn 1 (Buổi 1-6): Ôn tập TypeScript
+Học và làm hết các video TypeScript
+Học lại cho chắc nếu đã học
+Thực hành các bài tập nhỏ
+Chuẩn bị kiến thức nền tảng
+Giai đoạn 2 (Buổi 7 đến hết): Làm project
+Ngày 1-2: Họp nhóm, chọn đề tài, thống nhất common.types.ts, app.constants.ts, tsconfig.json, package.json, tạo Trello board, tạo Git repo
+Ngày 3-5: Mỗi thành viên làm model / repository / utils
+Ngày 6-7: Review code chéo, fix bug, viết unit test cơ bản
+Ngày 8-10: Hoàn thiện service của mình
+Ngày 11-12: Thành viên C tích hợp index.ts, test end-to-end
+Ngày 13: Viết README, viết file thuyết trình, chuẩn bị slide, quay video demo (dự phòng)
+Ngày 14: Nộp bài cho Phòng Giáo vụ (TRƯỚC DEADLINE 5 NGÀY)
+Cứ sau 2 buổi học phải báo cáo tiến độ project cho giảng viên
+Nếu không thấy sự thay đổi theo từng ngày → nhóm KHÔNG được bảo vệ
+Phải làm việc qua Git, có pull request, review chéo
+Phải cập nhật Trello board thường xuyên
+Quy tắc làm việc
+Dùng Git: branch main, dev, feature/<tên>
+Mỗi thành viên tạo Pull Request khi xong task
+Review chéo trước khi merge
+Họp nhóm ít nhất 2 lần/tuần
+Ghi log công việc vào WORKLOG.md
+Cập nhật Trello hàng ngày
+Commit message rõ ràng: feat:, fix:, docs:, test:, refactor:
+YÊU CẦU NỘP BÀI CHO PHÒNG GIÁO VỤHình thức nộp
+Nộp file nén (.zip) theo quy định Phòng Giáo vụ
+Đặt tên: <Mã lớp>_<Tên nhóm>_TypeScriptProject.zip
+Nộp TRƯỚC deadline ít nhất 5 ngày
+Bản cứng: đóng bìa gọn gàng, không nhếch nhác
+Bản mềm: đầy đủ source code, docs, slide
+Cấu trúc file nén
+<Mã lớp>_<Tên nhóm>_TypeScriptProject.zip
+├── src/ (toàn bộ source code)
+├── tests/ (unit test - BẮT BUỘC)
+├── docs/
+│ ├── README.md (TIẾNG ANH)
+│ ├── WORKLOG.md (TIẾNG ANH)
+│ ├── DEMO.md (kịch bản bảo vệ - TIẾNG ANH)
+│ ├── SLIDES.pdf (theo mẫu đính kèm, TIẾNG ANH)
+│ └── THESIS.pdf (file thuyết trình, tối thiểu 50 trang, TIẾNG ANH)
+├── trello-export/ (ảnh chụp Trello board)
+├── tsconfig.json
+├── jest.config.js
+├── package.json
+├── .gitignore
+└── .eslintrc.json (bonus)Nội dung bắt buộc trong README.md (TIẾNG ANH)Project name, team members (full name + student ID + email)Chosen topic and reasonDetailed task assignment per memberInstallation and running instructionsList of completed featuresSystem architecture (diagram if available)Difficulties and solutionsSelf-assessment score per member (with confirmation signature)Cách chạy
+npm install
+npm run build # Kiểm tra type
+npm start # Chạy demo
+npm test # Chạy unit test
+npm run typecheck # Chỉ check typepackage.json gợi ý
+{
+"name": "typescript-project",
+"version": "1.0.0",
+"scripts": {
+"build": "tsc",
+"start": "ts-node src/index.ts",
+"test": "jest",
+"test:coverage": "jest --coverage",
+"typecheck": "tsc --noEmit",
+"lint": "eslint src/**/*.ts"
+},
+"devDependencies": {
+"typescript": "^5.0.0",
+"ts-node": "^10.9.0",
+"@types/node": "^20.0.0",
+"@types/jest": "^29.0.0",
+"jest": "^29.0.0",
+"ts-jest": "^29.0.0"
+}
+}tsconfig.json gợi ý
+{
+"compilerOptions": {
+"target": "ES2020",
+"module": "commonjs",
+"strict": true,
+"noImplicitAny": true,
+"strictNullChecks": true,
+"noImplicitOverride": true,
+"noUnusedLocals": true,
+"noUnusedParameters": true,
+"esModuleInterop": true,
+"skipLibCheck": true,
+"forceConsistentCasingInFileNames": true,
+"outDir": "./dist",
+"rootDir": "./src"
+},
+"include": ["src/**/*"],
+"exclude": ["node_modules", "dist"]
+}jest.config.js gợi ý
+module.exports = {
+preset: "ts-jest",
+testEnvironment: "node",
+roots: ["<rootDir>/tests"],
+testMatch: ["/.d.ts",
+"!src/index.ts"
+],
+coverageThreshold: {
+global: {
+branches: 70,
+functions: 70,
+lines: 70,
+statements: 70
+}
+}
+};YÊU CẦU FILE THUYẾT TRÌNH & SLIDEFile thuyết trình đồ án (THESIS.pdf)
+Định dạng: PDF, TIẾNG ANH hoàn toàn
+Tổng số trang: TỐI THIỂU 50 TRANG
+Phải theo đúng mẫu đính kèm, KHÔNG tự ý đổi mẫu
+Phải có đầy đủ các chương mục theo mẫu
+Nội dung phân chia rõ ràng thành các chương
+Các sơ đồ phải export ra ảnh (không chụp màn hình), chất lượng cao
+Slide giới thiệu (SLIDES.pdf)
+Định dạng: PDF, TIẾNG ANH hoàn toàn
+Phải theo đúng mẫu đính kèm
+KHÔNG được bỏ bất kỳ nội dung nào trong mẫu
+Căn cứ đề tài điều chỉnh nội dung cho phù hợp
+Header, footer của slide phải chỉnh sửa theo project của mình (không để lôm côm)
+Các sơ đồ phải export ra ảnh, KHÔNG chụp màn hình
+Cấu trúc thuyết trình (gợi ý theo mẫu)Cover page: Project name, team members, instructor, dateIntroduction: Problem statement, objectives, scopeLiterature review / Related workSystem analysis: Requirements (functional + non-functional)System design: Architecture, class diagram, sequence diagramImplementation: Technologies used, key features, console screenshotsTesting: Unit test, test coverageDemonstration: Demo script, sample outputsConclusion: Achievements, limitations, future workReferencesQ&ABUỔI BẢO VỆ PROJECTHình thức
+Mỗi nhóm: 15-20 phút bảo vệ trực tiếp trước hội đồng
+Cả thành viên đều phải có mặt và tham gia
+Giảng viên có thể hỏi bất kỳ thành viên nào về bất kỳ phần code nào
+Vắng mặt không lý do chính đáng → trừ điểm cá nhân
+Chuẩn bị trước buổi bảo vệ
+□ Đến sớm 30 phút
+□ Trang phục gọn gàng, lịch sự (KHÔNG nhếch nhác)
+□ Máy tính sạc đầy pin, có backup charger
+□ Test chạy demo trên máy ít nhất 2 lần- [ ] Có video demo dự phòng (nếu máy lỗi)
+□ Slide PDF đã copy sẵn vào USB + email
+□ Bản cứng THESIS đóng bìa gọn gàng
+□ Dữ liệu seed sẵn để demo nhanh
+□ Mỗi thành viên đọc code của 2 bạn còn lại
+□ Chuẩn bị câu trả lời cho câu hỏi thường gặp
+□ Phân công ai demo phần nào
+□ Chuẩn bị câu kết ấn tượng + cảm ơn thầy cô
+Cấu trúc buổi bảo vệ
+Giới thiệu đề tài, lý do chọn
+Trình bày kiến trúc hệ thống
+Demo các chức năng chính
+Nêu điểm nổi bật và khó khăn
+Chạy npm start để demo
+Demo các chức năng thành công
+Demo các trường hợp thất bại
+Demo báo cáo, export JSON
+Demo log hoạt động
+Demo chạy npm test và show coverage
+Giảng viên hỏi về code, sơ đồ, kiến thức TypeScript
+Có thể yêu cầu giải thích đoạn code cụ thể
+Có thể yêu cầu chỉnh sửa nhỏ ngay tại chỗ
+Bộ câu hỏi thường gặp
+Tại sao dùng interface thay vì type (hoặc ngược lại)?Generic InMemoryRepository hoạt động như thế nào?Phân biệt any và unknown? Tại sao em dùng unknown?Utility type Partial, Omit, Pick dùng ở đâu?Discriminated union là gì? Em dùng ở đâu?Access modifier private, protected khác nhau thế nào?Abstract class khác interface ở điểm nào?Type narrowing là gì? Em dùng typeof/instanceof/in ở đâu?Tại sao cần readonly?Làm sao đảm bảo type safety?
+Giải thích flow của function borrowBook từ đầu đến cuối.Nếu member inactive mà vẫn gọi borrowBook thì sao?Tại sao throw Error thay vì return false?Method này xử lý edge case nào? Còn thiếu gì?Nếu muốn thêm tính năng X thì sửa ở đâu?Tại sao dùng Map thay vì Array trong Repository?Class này có thể tách nhỏ hơn không?
+Giải thích class diagram này.Tại sao quan hệ giữa A và B là composition mà không phải aggregation?Sequence diagram này thể hiện flow gì?Tại sao thiết kế như vậy? Có ưu nhược điểm gì?Sơ đồ kiến trúc này có nhược điểm gì?
+Em phụ trách phần nào? Giải thích code của mình.Em có hiểu phần của bạn B không? Giải thích function này.Nhóm giải quyết conflict code như thế nào?Nếu làm lại, nhóm sẽ cải tiến gì?Tiêu chí chấm buổi bảo vệ
+Tiêu chí Điểm
+Demo console chạy thành công 20
+Trả lời đúng câu hỏi về code của mình 25
+Trả lời đúng câu hỏi về code của bạn 15
+Trả lời đúng câu hỏi lý thuyết TS 20
+Trả lời đúng câu hỏi về sơ đồ 10
+Thuyết trình rõ ràng, tự tin 10Kịch bản demo gợi ý
+Chạy npm start để khởi độngDemo thêm thực thể chính (ví dụ thêm sách)Demo tìm kiếm, cập nhật, xóaChỉ vào console.log để giải thích response
+Demo đăng ký memberDemo nghiệp vụ đặc thù (ví dụ mượn sách)Demo trường hợp thất bại (mượn sách đã hết)Demo nghiệp vụ phức tạp (trả sách quá hạn, tính phạt)
+Demo in báo cáo thống kêDemo top N, thống kê theo thángDemo export JSONDemo logger.getLogs()Demo chạy npm test, show coverage
+Cả nhóm cảm ơn thầy cô đã lắng nghe
+Có thể thêm câu nói ấn tượng
+THANG ĐIỂM TỔNG (100 điểm)
+Tiêu chí Điểm Mô tả
+Đúng chức năng 20 Tất cả tính năng hoạt động đúng
+Chất lượng type 15 Không lạm dụng any, dùng generic hợp lý
+Cấu trúc code 10 Tách file rõ ràng, không circular import
+Xử lý lỗi 10 Validate input, throw Error đúng chỗ
+Unit test 10 Đầy đủ, coverage >= 70%
+Làm việc nhóm 10 Git history rõ ràng, Trello đầy đủ
+File thuyết trình (THESIS) 10 Đủ 50 trang, tiếng Anh, đúng mẫu
+Slide 10 Đúng mẫu, tiếng Anh, sơ đồ export ảnh
+Bảo vệ project 5 Demo thành công, trả lời tốtĐiểm cộng (tối đa +10)
+Có ESLint + Prettier config: +2đ
+Có CLI tương tác (đọc input từ terminal): +3đ
+Có CI/CD (GitHub Actions): +3đ
+Có documentation chất lượng cao: +2đ
+Điểm trừ
+Dùng any không cần thiết: -1đ/lần (tối đa -10đ)
+Copy code không hiểu: -5đ
+Một thành viên làm hết: -10đ
+Không có unit test: -10đ
+Nộp trễ: -10%/ngày
+Slide/THESIS không tiếng Anh: -5đ
+Slide/THESIS không theo mẫu: -5đ
+KHÔNG có Trello/Git: -10đ
+DEADLINE VÀ CHECKPOINT
+Buổi 7
+Sau buổi 8 (báo cáo tiến độ lần 1)
+Sau buổi 10 (báo cáo tiến độ lần 2)
+Sau buổi 12 (báo cáo tiến độ lần 3)
+Sau buổi 14 (báo cáo tiến độ lần 4)
+Sau buổi 16 (TRƯỚC deadline 5 ngày)
+Sau buổi 17-18
+Cứ sau 2 buổi học phải báo cáo tiến độ. Nếu không thấy sự thay đổi theo từng ngày → KHÔNG được bảo vệ.GỢI Ý VÀ LƯU ÝCho cả nhómHọp ngay buổi 7 để chọn đề tài và thống nhất interface chung.Tạo file common.types.ts và app.constants.ts TRƯỚC khi ai làm gì.Tạo Trello board và Git repo ngay buổi đầu tiên.Commit thường xuyên, message rõ ràng theo chuẩn Conventional Commits.Review chéo mỗi PR, không tự merge code của mình.Test từng function nhỏ trước khi tích hợp.Cập nhật Trello hàng ngày để thầy thấy tiến độ.Hoàn thiện TRƯỚC deadline 5 ngày để kịp sửa chữa.KHÔNG sao chép đề tài của nhóm khác.Header, footer của slide phải chỉnh theo project của mình.Cho từng thành viên
+Chú ý validate unique field, không cho giá trị âm hoặc rỗng.
+Chú ý edge case trùng lặp, bản ghi inactive, vượt giới hạn.
+Chú ý format bảng đẹp, log đủ level, report tính đúng, unit test đầy đủ.
+Tài liệu tham khảo
+TypeScript Handbook: https://www.typescriptlang.org/docs/handbook/intro.html
+Utility Types: https://www.typescriptlang.org/docs/handbook/utility-types.html
+Jest: https://jestjs.io/docs/getting-started
+Trello: https://trello.com/
+Git: https://git-scm.com/doc
+Khi bí
+Hỏi nhóm trước, mô tả đã thử gì
+Nếu vẫn bí, hỏi giảng viên kèm code cụ thể
+Không copy code từ internet mà không hiểu
+Nên xem các nhóm bảo vệ trước để học kinh nghiệm
+LƯU Ý CUỐI CÙNG và comment "đã đọc kỹ" xuống dưới để thầy biết - không được nửa Anh nửa Việt - không tự ý đổi mẫu cho file thuyết trình trong suốt quá trình làm - bắt buộc - không cần website, không cần hosting trước buổi bảo vệ - không chụp màn hình - chuẩn bị tinh thần - cần hiểu rõ

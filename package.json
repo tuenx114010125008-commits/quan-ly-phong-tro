@@ -1,0 +1,27 @@
+{
+  "name": "quan-ly-phong-tro",
+  "version": "1.0.0",
+  "description": "Hệ thống Quản lý Phòng trọ - Dự án TypeScript Console (Phần Thành viên 1: Database & Management)",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "demo": "ts-node src/demo.ts",
+    "seed": "ts-node src/database/seed.ts"
+  },
+  "keywords": [
+    "typescript",
+    "management",
+    "console-app",
+    "sqlite",
+    "quan-ly-phong-tro"
+  ],
+  "author": "Thành viên 1",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  }
+}

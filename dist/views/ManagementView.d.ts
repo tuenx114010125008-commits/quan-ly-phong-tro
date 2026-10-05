@@ -1,0 +1,38 @@
+import { RoomService } from '../services/RoomService';
+import { CustomerService } from '../services/CustomerService';
+import { ServiceService } from '../services/ServiceService';
+import { EquipmentService } from '../services/EquipmentService';
+import { AuthService } from '../services/AuthService';
+export declare class ManagementView {
+    private roomService;
+    private customerService;
+    private serviceService;
+    private equipmentService;
+    private authService;
+    constructor(roomService: RoomService, customerService: CustomerService, serviceService: ServiceService, equipmentService: EquipmentService, authService: AuthService);
+    handleRoomMenu(): Promise<void>;
+    private displayRoomList;
+    private addRoom;
+    private editRoom;
+    private deleteRoom;
+    private searchRoom;
+    private filterRoom;
+    private changeRoomStatus;
+    private compareRooms;
+    private manageRoomEquipment;
+    handleCustomerMenu(): Promise<void>;
+    private displayCustomerList;
+    private addCustomer;
+    private editCustomer;
+    private deleteCustomer;
+    private searchCustomer;
+    private toggleCustomerStatus;
+    handleServiceMenu(): Promise<void>;
+    private displayServiceList;
+    private addService;
+    private updateServicePrice;
+    private toggleServiceStatus;
+    private deleteService;
+    private searchService;
+    handleUserMenu(): Promise<void>;
+}
