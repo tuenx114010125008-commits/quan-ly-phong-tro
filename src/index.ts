@@ -73,7 +73,6 @@ async function bootstrap() {
   while (true) {
     if (!authService.isLoggedIn()) {
       console.log('--- DANG NHAP HE THONG ---');
-      console.log('(Tai khoan mac dinh: admin / admin123 | manager / manager123 | staff / staff123)');
       
       const username = await InputPrompt.ask('Tai khoan (hoac "exit" de thoat): ');
       if (username.toLowerCase() === 'exit') {
