@@ -21,27 +21,27 @@ describe('RoomService Unit Tests', () => {
   });
 
   test('addRoom creates a new room with valid input', () => {
+    const testRoomNum = `TEST_${Date.now()}`;
     const res = roomService.addRoom({
-      roomNumber: 'ROOM_TEST_101',
+      roomNumber: testRoomNum,
       area: 28.5,
       monthlyRent: 3800000,
       description: 'Phòng kiểm thử'
     });
 
     expect(res.success).toBe(true);
-    expect(res.data?.roomNumber).toBe('ROOM_TEST_101');
+    expect(res.data?.roomNumber).toBe(testRoomNum);
     expect(res.data?.status).toBe(RoomStatus.AVAILABLE);
-  });
 
-  test('addRoom fails when adding duplicate room number', () => {
-    const res = roomService.addRoom({
-      roomNumber: 'ROOM_TEST_101', // Already added above
+    // Thử thêm lại phòng cùng số phòng để kiểm tra bắt lỗi trùng lặp
+    const duplicateRes = roomService.addRoom({
+      roomNumber: testRoomNum,
       area: 25,
       monthlyRent: 3000000
     });
 
-    expect(res.success).toBe(false);
-    expect(res.message).toContain('đã tồn tại');
+    expect(duplicateRes.success).toBe(false);
+    expect(duplicateRes.message).toContain('đã tồn tại');
   });
 
   test('addRoom fails with invalid area or rent', () => {
