@@ -68,9 +68,7 @@ async function bootstrap() {
   console.clear();
   console.log('=================================================================');
   console.log('            CHUONG TRINH QUAN LY PHONG TRO (CONSOLE APP)         ');
-  console.log('=================================================================');
-  console.log('Cong nghe: TypeScript (Node.js + SQLite)');
-  console.log('Phan cong: Nhom 2 thanh vien\n');
+  console.log('=================================================================\n');
 
   while (true) {
     if (!authService.isLoggedIn()) {
