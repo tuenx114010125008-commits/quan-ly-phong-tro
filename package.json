@@ -1,7 +1,7 @@
 {
   "name": "quan-ly-phong-tro",
   "version": "1.0.0",
-  "description": "Hệ thống Quản lý Phòng trọ - Dự án TypeScript Console (Phần Thành viên 1: Database & Management)",
+  "description": "Hệ thống Quản lý Phòng trọ - Dự án TypeScript Console Application",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
@@ -19,7 +19,7 @@
     "sqlite",
     "quan-ly-phong-tro"
   ],
-  "author": "Thành viên 1",
+  "author": "VTC Academy",
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^30.0.0",

@@ -25,12 +25,12 @@ quan-ly-phong-tro/
 │   ├── models/         # User, Room, Customer, Contract, Invoice, Service, Equipment
 │   ├── repositories/   # BaseRepository generic va cac repository cu the
 │   ├── services/       # AuthService, RoomService, ContractService, InvoiceService, ReportService...
+│   ├── types/          # Type definitions & enums
 │   ├── utils/          # Validator, Formatter, Logger, IdGenerator
-│   ├── views/          # Menu console
+│   ├── views/          # Menu console UI
 │   ├── index.ts        # File chay chinh
 │   └── demo.ts         # Script chay demo
 ├── tests/              # Jest unit tests
-├── docs/               # Tai lieu tieng Anh theo mau
 ├── package.json
 └── tsconfig.json
 ```
