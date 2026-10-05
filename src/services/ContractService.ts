@@ -169,7 +169,7 @@ export class ContractService {
     return this.contractRepo.find(c =>
       c.id.toLowerCase().includes(term) ||
       c.roomId.toLowerCase().includes(term) ||
-      (c.notes && c.notes.toLowerCase().includes(term))
+      Boolean(c.notes?.toLowerCase().includes(term))
     );
   }
 

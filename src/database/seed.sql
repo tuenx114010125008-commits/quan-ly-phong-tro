@@ -40,3 +40,22 @@ INSERT OR IGNORE INTO services (id, name, unit, unit_price, status, description,
 ('DV003', 'Internet / Wifi tốc độ cao', 'phòng/tháng', 100000, 'ACTIVE', 'Gói cước cáp quang 150Mbps', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 ('DV004', 'Vệ sinh & Rác', 'người/tháng', 30000, 'ACTIVE', 'Thu gom rác và dọn vệ sinh hành lang', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 ('DV005', 'Giữ xe máy', 'người/tháng', 80000, 'ACTIVE', 'Phí gửi xe trong hầm nhà xe', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+-- 6. CONTRACTS
+INSERT OR IGNORE INTO contracts (id, room_id, start_date, end_date, deposit, monthly_rent, status, notes, created_at, updated_at) VALUES
+('HD001', 'P001', '2026-01-01', '2026-11-01', 3500000, 3500000, 'ACTIVE', 'Hợp đồng thuê 1 năm, cọc 1 tháng', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('HD002', 'P003', '2026-03-01', '2027-03-01', 4200000, 4200000, 'ACTIVE', 'Hợp đồng 2 khách ở ghép', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+-- 7. CONTRACT_CUSTOMERS
+INSERT OR IGNORE INTO contract_customers (contract_id, customer_id) VALUES
+('HD001', 'KH001'),
+('HD002', 'KH002'),
+('HD002', 'KH003');
+
+-- 8. INVOICES
+INSERT OR IGNORE INTO invoices (id, contract_id, room_id, month, year, room_rent_amount, old_electricity, new_electricity, electricity_amount, old_water, new_water, water_amount, internet_amount, cleaning_amount, surcharge, discount, total_amount, status, payment_date, created_at, updated_at) VALUES
+('INV001', 'HD001', 'P001', 8, 2026, 3500000, 100, 180, 280000, 20, 24, 100000, 100000, 30000, 0, 0, 4010000, 'PAID', '2026-08-05 10:00:00', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('INV002', 'HD001', 'P001', 9, 2026, 3500000, 180, 275, 332500, 24, 29, 125000, 100000, 30000, 0, 0, 4087500, 'PAID', '2026-09-05 14:30:00', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('INV003', 'HD001', 'P001', 10, 2026, 3500000, 275, 370, 332500, 29, 34, 125000, 100000, 30000, 50000, 0, 4137500, 'UNPAID', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('INV004', 'HD002', 'P003', 10, 2026, 4200000, 50, 160, 385000, 10, 18, 200000, 100000, 60000, 0, 50000, 4895000, 'UNPAID', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+

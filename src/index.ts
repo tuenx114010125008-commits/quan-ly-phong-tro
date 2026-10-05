@@ -4,14 +4,21 @@ import { CustomerRepository } from './repositories/CustomerRepository';
 import { ServiceRepository } from './repositories/ServiceRepository';
 import { EquipmentRepository } from './repositories/EquipmentRepository';
 import { UserRepository } from './repositories/UserRepository';
+import { ContractRepository } from './repositories/ContractRepository';
+import { InvoiceRepository } from './repositories/InvoiceRepository';
 
 import { RoomService } from './services/RoomService';
 import { CustomerService } from './services/CustomerService';
 import { ServiceService } from './services/ServiceService';
 import { EquipmentService } from './services/EquipmentService';
 import { AuthService } from './services/AuthService';
+import { ContractService } from './services/ContractService';
+import { InvoiceService } from './services/InvoiceService';
+import { PaymentService } from './services/PaymentService';
+import { ReportService } from './services/ReportService';
 
 import { ManagementView } from './views/ManagementView';
+import { RentalFinanceView } from './views/RentalFinanceView';
 import { InputPrompt } from './views/InputPrompt';
 import { Formatter } from './utils/Formatter';
 import { Logger } from './utils/Logger';
@@ -20,7 +27,7 @@ async function bootstrap() {
   // 1. Khởi tạo Database và kết nối
   const db = DatabaseConnection.getInstance();
   
-  // Tự động nạp dữ liệu mẫu nếu chưa có dữ liệu phòng
+  // Nạp lại dữ liệu mẫu nếu DB mới
   const userRepo = new UserRepository();
   if (userRepo.count() === 0) {
     Logger.info('Cơ sở dữ liệu mới khởi tạo, đang nạp dữ liệu mẫu ban đầu...', 'System');
@@ -32,18 +39,34 @@ async function bootstrap() {
   const roomRepo = new RoomRepository(equipmentRepo);
   const customerRepo = new CustomerRepository();
   const serviceRepo = new ServiceRepository();
+  const contractRepo = new ContractRepository();
+  const invoiceRepo = new InvoiceRepository();
 
   const authService = new AuthService(userRepo);
   const equipmentService = new EquipmentService(equipmentRepo);
   const roomService = new RoomService(roomRepo, equipmentRepo);
   const customerService = new CustomerService(customerRepo);
   const serviceService = new ServiceService(serviceRepo);
+  const contractService = new ContractService(contractRepo, roomRepo, customerRepo);
+  const invoiceService = new InvoiceService(invoiceRepo, contractRepo, roomRepo, serviceRepo);
+  const paymentService = new PaymentService(invoiceRepo);
+  const reportService = new ReportService(roomRepo, customerRepo, contractRepo, invoiceRepo);
 
-  const view = new ManagementView(
+  const managementView = new ManagementView(
     roomService,
     customerService,
     serviceService,
     equipmentService,
+    authService
+  );
+
+  const rentalFinanceView = new RentalFinanceView(
+    contractService,
+    invoiceService,
+    paymentService,
+    reportService,
+    customerService,
+    roomService,
     authService
   );
 
@@ -52,7 +75,7 @@ async function bootstrap() {
   console.log('\x1b[1;36m       🏠 HỆ THỐNG QUẢN LÝ PHÒNG TRỌ (CONSOLE APPLICATION)      \x1b[0m');
   console.log('\x1b[32m=================================================================\x1b[0m');
   console.log('📌 Công nghệ: TypeScript 5.x | Node.js | SQLite (In-Process SQL)');
-  console.log('📌 Phân hệ: Thành viên 1 — Database & Management Core Architecture\n');
+  console.log('📌 Hoàn thiện: Tích hợp đầy đủ cả Phân hệ 1 & Phân hệ 2\n');
 
   // 3. Vòng lặp Đăng nhập & Menu chính
   while (true) {
@@ -87,55 +110,64 @@ async function bootstrap() {
     console.log('\x1b[34m=================================================================\x1b[0m');
     console.log('\x1b[1;33m                        MENU CHÍNH                              \x1b[0m');
     console.log('\x1b[34m-----------------------------------------------------------------\x1b[0m');
+    console.log('\x1b[1;36m[PHÂN HỆ 1: QUẢN LÝ THỰC THỂ & CƠ SỞ VẬT CHẤT]\x1b[0m');
     console.log(' [1] 🏢 Quản lý Phòng trọ (CRUD, Tìm kiếm, Lọc, So sánh)');
     console.log(' [2] 👥 Quản lý Khách thuê (CRUD, CCCD, SĐT, Quê quán)');
     console.log(' [3] 💡 Quản lý Bảng giá Dịch vụ (Điện, Nước, Internet, Rác)');
     console.log(' [4] 🔧 Quản lý Trang thiết bị phòng');
-    
+
+    console.log('\n\x1b[1;36m[PHÂN HỆ 2: HỢP ĐỒNG, TÀI CHÍNH & THỐNG KÊ]\x1b[0m');
+    console.log(' [5] 📝 Quản lý Hợp đồng thuê phòng (Lập HĐ, Gia hạn, Hủy HĐ)');
+    console.log(' [6] 🧾 Quản lý Hóa đơn & Tiền Điện/Nước (Tính tiền, Bậc thang)');
+    console.log(' [7] 💳 Thanh toán Hóa đơn & In biên lai thu tiền');
+    console.log(' [8] 📊 Báo cáo Doanh thu, Thống kê & Xuất file JSON');
+
     if (currentUser.isAdmin()) {
-      console.log(' [5] 🔐 Quản lý Tài khoản & Phân quyền (ADMIN)');
+      console.log('\n\x1b[1;36m[HỆ THỐNG]\x1b[0m');
+      console.log(' [9] 🔐 Quản lý Tài khoản & Phân quyền (ADMIN)');
     }
 
-    console.log('\x1b[90m --- Phân hệ Thành viên 2 (Rental & Finance) --- \x1b[0m');
-    console.log(' [6] 📝 Quản lý Hợp đồng thuê phòng (Ready for Member 2)');
-    console.log(' [7] 🧾 Quản lý Hóa đơn & Tiền Điện/Nước (Ready for Member 2)');
-    console.log(' [8] 📊 Báo cáo Doanh thu & Thống kê (Ready for Member 2)');
     console.log('\x1b[34m-----------------------------------------------------------------\x1b[0m');
-    console.log(' [9] 🚪 Đăng xuất tài khoản');
-    console.log(' [0] ❌ Thoát chương trình');
+    console.log(' [10] 🚪 Đăng xuất tài khoản');
+    console.log(' [0]  ❌ Thoát chương trình');
     console.log('\x1b[34m=================================================================\x1b[0m');
 
     const choice = await InputPrompt.ask('👉 Nhập lựa chọn của bạn: ');
 
     switch (choice) {
       case '1':
-        await view.handleRoomMenu();
+        await managementView.handleRoomMenu();
         break;
       case '2':
-        await view.handleCustomerMenu();
+        await managementView.handleCustomerMenu();
         break;
       case '3':
-        await view.handleServiceMenu();
+        await managementView.handleServiceMenu();
         break;
       case '4':
-        await view.handleRoomMenu();
+        await managementView.handleRoomMenu();
         break;
       case '5':
+        await rentalFinanceView.handleContractMenu();
+        break;
+      case '6':
+        await rentalFinanceView.handleInvoiceMenu();
+        break;
+      case '7':
+        await rentalFinanceView.handlePaymentMenu();
+        break;
+      case '8':
+        await rentalFinanceView.handleReportMenu();
+        break;
+      case '9':
         if (currentUser.isAdmin()) {
-          await view.handleUserMenu();
+          await managementView.handleUserMenu();
         } else {
           console.log('\x1b[31m⚠️ Bạn không có quyền truy cập chức năng này!\x1b[0m');
           await InputPrompt.pause();
         }
         break;
-      case '6':
-      case '7':
-      case '8':
-        console.log('\n\x1b[33mℹ️ Module Hợp đồng, Hóa đơn & Báo cáo tài chính thuộc phân hệ Thành viên 2.');
-        console.log('Hệ thống Database và Model sẵn sàng cho việc tích hợp!\x1b[0m');
-        await InputPrompt.pause();
-        break;
-      case '9':
+      case '10':
         authService.logout();
         console.log('\x1b[32m✔ Đã đăng xuất thành công.\x1b[0m');
         await InputPrompt.pause();

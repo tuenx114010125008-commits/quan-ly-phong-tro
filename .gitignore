@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Production output
+dist/
+
+# SQLite Database & logs
+data/
+app.log
+*.log
+
+# Export reports directory
+reports/*.json
+!reports/.gitkeep
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
