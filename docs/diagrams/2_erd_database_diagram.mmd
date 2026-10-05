@@ -1,0 +1,71 @@
+erDiagram
+    USERS {
+        string id PK
+        string username UK
+        string passwordHash
+        string fullName
+        string role
+        boolean isActive
+    }
+    ROOMS {
+        string id PK
+        string roomNumber UK
+        number price
+        number area
+        string status
+        number maxOccupants
+    }
+    EQUIPMENT {
+        string id PK
+        string roomId FK
+        string name
+        string code
+        string condition
+    }
+    CUSTOMERS {
+        string id PK
+        string fullName
+        string identityCard UK
+        string phone
+        string email
+        boolean isStaying
+    }
+    SERVICES {
+        string id PK
+        string name
+        number unitPrice
+        string unit
+    }
+    ROOM_SERVICES {
+        string id PK
+        string roomId FK
+        string serviceId FK
+    }
+    CONTRACTS {
+        string id PK
+        string contractNumber UK
+        string roomId FK
+        string customerId FK
+        string startDate
+        string endDate
+        number depositAmount
+        number monthlyRent
+        string status
+    }
+    INVOICES {
+        string id PK
+        string invoiceNumber UK
+        string contractId FK
+        string billingMonth
+        number electricityUsage
+        number electricityAmount
+        number totalAmount
+        string status
+    }
+
+    ROOMS ||--o{ EQUIPMENT : trang_bi
+    ROOMS ||--o{ ROOM_SERVICES : dang_ky
+    SERVICES ||--o{ ROOM_SERVICES : cung_cap
+    ROOMS ||--o{ CONTRACTS : duoc_thue
+    CUSTOMERS ||--o{ CONTRACTS : dung_ten
+    CONTRACTS ||--o{ INVOICES : phat_sinh

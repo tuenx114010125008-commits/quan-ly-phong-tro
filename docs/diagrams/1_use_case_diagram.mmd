@@ -1,0 +1,30 @@
+flowchart LR
+    Admin[Quan tri vien - Admin]
+    Staff[Nhan vien - Staff]
+    Staff --> Admin
+
+    subgraph System [He thong Quan ly Nha tro]
+        UC_Login([Dang nhap he thong])
+        UC_Room([Quan ly danh muc phong])
+        UC_Equip([Quan ly trang thiet bi])
+        UC_Customer([Quan ly khach thue va CCCD])
+        UC_Contract([Lap hop dong thue tro])
+        UC_Invoice([Lap hoa don va Tinh dien EVN])
+        UC_Report([Bao cao tai chinh va Doanh thu])
+        UC_Audit([Ghi log kiem toan])
+
+        UC_Contract -.->|include| UC_Customer
+        UC_Contract -.->|include| UC_Room
+        UC_Invoice -.->|extend| UC_Report
+        UC_Audit -.->|extend| UC_Login
+    end
+
+    Staff --- UC_Login
+    Staff --- UC_Customer
+    Staff --- UC_Contract
+    Staff --- UC_Invoice
+
+    Admin --- UC_Room
+    Admin --- UC_Equip
+    Admin --- UC_Report
+    Admin --- UC_Audit

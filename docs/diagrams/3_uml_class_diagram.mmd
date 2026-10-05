@@ -1,0 +1,80 @@
+classDiagram
+    class BaseEntity {
+        <<Abstract>>
+        +string id
+        +Date createdAt
+        +Date updatedAt
+    }
+
+    class Room {
+        +string roomNumber
+        +number price
+        +number area
+        +RoomStatus status
+        +number maxOccupants
+        +isAvailable() boolean
+    }
+
+    class Customer {
+        +string fullName
+        +string identityCard
+        +string phone
+        +string email
+        +boolean isStaying
+        +validateCCCD() boolean
+    }
+
+    class Contract {
+        +string contractNumber
+        +string roomId
+        +string customerId
+        +Date startDate
+        +Date endDate
+        +number depositAmount
+        +ContractStatus status
+        +isExpired() boolean
+    }
+
+    class Invoice {
+        +string invoiceNumber
+        +string contractId
+        +string billingMonth
+        +number electricityUsage
+        +number electricityAmount
+        +number totalAmount
+        +PaymentStatus status
+        +markAsPaid() void
+    }
+
+    class BillingCalculator {
+        <<Utility>>
+        +calculateElectricityEVN(usageKwh: number) TierBreakdown
+        +calculateVAT(amount: number, vatRate: number) number
+        +computeFinalInvoiceTotal(breakdown: BillingBreakdown) number
+    }
+
+    class ContractService {
+        -ContractRepository contractRepo
+        -RoomRepository roomRepo
+        +createContract(data: CreateContractDTO) Contract
+        +terminateContract(contractId: string) boolean
+    }
+
+    class InvoiceService {
+        -InvoiceRepository invoiceRepo
+        -BillingCalculator calculator
+        +generateMonthlyBill(contractId: string, kwh: number) Invoice
+        +collectPayment(invoiceId: string) boolean
+    }
+
+    BaseEntity <|-- Room
+    BaseEntity <|-- Customer
+    BaseEntity <|-- Contract
+    BaseEntity <|-- Invoice
+
+    Customer "1" <-- "1..*" Contract : ky_ten
+    Room "1" <-- "1..*" Contract : duoc_thue
+    Contract "1" <-- "0..*" Invoice : phat_sinh
+    InvoiceService ..> BillingCalculator : su_dung
+    InvoiceService ..> Invoice : quan_ly
+    ContractService ..> Contract : quan_ly
