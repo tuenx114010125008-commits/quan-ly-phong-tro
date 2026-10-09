@@ -4,13 +4,22 @@ import { DatabaseSync } from 'node:sqlite';
 import { Logger } from '../utils/Logger';
 
 /**
- * Lớp quản lý kết nối và thực thi SQL Database (SQLite / SQL engine)
+ * LỚP QUẢN LÝ KẾT NỐI CƠ SỞ DỮ LIỆU (DatabaseConnection)
+ * 
+ * 💡 Dễ hiểu cho người mới:
+ * - Áp dụng mẫu thiết kế "Singleton" (Chỉ có 1 kết nối duy nhất trong toàn ứng dụng).
+ * - Sử dụng SQLite tích hợp sẵn trong Node.js (không cần cài thêm server MySQL hay PostgreSQL).
+ * - Tự động tạo thư mục 'data/' và file 'quan_ly_phong_tro.db'.
  */
 export class DatabaseConnection {
+  // Biến lưu phiên kết nối duy nhất
   private static instance: DatabaseConnection | null = null;
   private db: DatabaseSync;
   private dbFilePath: string;
 
+  /**
+   * Hàm khởi tạo riêng tư (private) để ngăn tạo đối tượng bừa bãi bằng từ khóa `new`
+   */
   private constructor(dbPath?: string) {
     const dataDir = path.join(process.cwd(), 'data');
     if (!fs.existsSync(dataDir)) {
@@ -21,6 +30,9 @@ export class DatabaseConnection {
     this.initDatabase();
   }
 
+  /**
+   * Lấy kết nối duy nhất đến database (Nếu chưa có thì tạo mới, có rồi thì dùng lại)
+   */
   public static getInstance(dbPath?: string): DatabaseConnection {
     if (!DatabaseConnection.instance) {
       DatabaseConnection.instance = new DatabaseConnection(dbPath);

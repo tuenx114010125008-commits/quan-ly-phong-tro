@@ -25,19 +25,28 @@ export interface ElectricityBillResult {
  */
 export class BillingCalculator {
   /**
-   * Biểu giá điện sinh hoạt bậc thang (EVN / Chuẩn phòng trọ bậc thang)
-   * Bậc 1: 0 - 50 kWh: 1.806 đ
-   * Bậc 2: 51 - 100 kWh: 1.866 đ
-   * Bậc 3: 101 - 200 kWh: 2.167 đ
-   * Bậc 4: 201 - 300 kWh: 2.729 đ
-   * Bậc 5: 301 - 400 kWh: 3.050 đ
-   * Bậc 6: > 400 kWh: 3.151 đ
+   * 💡 CÔNG THỨC TÍNH TIỀN ĐIỆN BẬC THANG SINH HOẠT (EVN)
+   * 
+   * Quy tắc chia bậc:
+   * - Bậc 1: 50 kWh đầu tiên   👉 Giá: 1.806 đ/kWh
+   * - Bậc 2: 50 kWh tiếp theo  👉 Giá: 1.866 đ/kWh
+   * - Bậc 3: 100 kWh tiếp theo 👉 Giá: 2.167 đ/kWh
+   * - Bậc 4: 100 kWh tiếp theo 👉 Giá: 2.729 đ/kWh
+   * - Bậc 5: 100 kWh tiếp theo 👉 Giá: 3.050 đ/kWh
+   * - Bậc 6: Từ kWh thứ 401 trở đi 👉 Giá: 3.151 đ/kWh
+   * 
+   * Thuế VAT: 8% trên tổng tiền điện.
+   * 
+   * @param consumption Số kWh điện tiêu thụ (Chỉ số mới - Chỉ số cũ)
+   * @param vatRate Tỷ lệ thuế VAT (Mặc định 8% = 0.08)
    */
   public static calculateTieredElectricityBill(consumption: number, vatRate: number = 0.08): ElectricityBillResult {
+    // 1. Kiểm tra đầu vào hợp lệ
     if (consumption < 0) {
       throw new Error('Số điện tiêu thụ không được âm.');
     }
 
+    // 2. Định nghĩa danh sách 6 bậc thang theo quy định
     const tiers = [
       { name: 'Bậc 1 (0 - 50 kWh)', limit: 50, price: 1806 },
       { name: 'Bậc 2 (51 - 100 kWh)', limit: 50, price: 1866 },
@@ -51,20 +60,27 @@ export class BillingCalculator {
     const tierDetails: ElectricityTierDetail[] = [];
     let subtotal = 0;
 
+    // 3. Phân bổ số điện vào từng bậc (Tương tự rót nước qua các bình dung tích giới hạn)
     for (const tier of tiers) {
       if (remaining <= 0) break;
+
+      // Số kWh lọt vào bậc hiện tại
       const kwh = Math.min(remaining, tier.limit);
       const amount = Math.round(kwh * tier.price);
       subtotal += amount;
+
       tierDetails.push({
         tierName: tier.name,
         kwhInTier: kwh,
         unitPrice: tier.price,
         amount
       });
+
+      // Trừ đi số kWh đã tính ở bậc này
       remaining -= kwh;
     }
 
+    // 4. Tính tiền thuế VAT 8% và Tổng cộng sau thuế
     const vatAmount = Math.round(subtotal * vatRate);
     const total = subtotal + vatAmount;
 

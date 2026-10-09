@@ -1,11 +1,18 @@
 import * as readline from 'readline';
 
 /**
- * Tiện ích đọc dữ liệu nhập từ bàn phím trên Console
+ * BỘ TIỆN ÍCH NHẬP LIỆU BÀN PHÍM (InputPrompt)
+ * 
+ * 💡 Dễ hiểu cho người mới:
+ * - Module readline của Node.js dùng để đọc dữ liệu khi người dùng gõ phím trên màn hình Console.
+ * - Được bọc trong `Promise` (async/await) để code viết tuần tự, dễ đọc như: `const name = await InputPrompt.ask('Tên: ');`
  */
 export class InputPrompt {
   private static rl: readline.Interface | null = null;
 
+  /**
+   * Khởi tạo giao diện đọc luồng nhập xuất chuẩn (stdin / stdout)
+   */
   private static getInterface(): readline.Interface {
     if (!this.rl) {
       this.rl = readline.createInterface({
@@ -16,6 +23,9 @@ export class InputPrompt {
     return this.rl;
   }
 
+  /**
+   * Hỏi một câu hỏi và chờ người dùng gõ câu trả lời + nhấn Enter
+   */
   public static ask(question: string): Promise<string> {
     const rl = this.getInterface();
     return new Promise((resolve) => {

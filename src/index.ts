@@ -22,14 +22,28 @@ import { RentalFinanceView } from './views/RentalFinanceView';
 import { InputPrompt } from './views/InputPrompt';
 import { Formatter } from './utils/Formatter';
 
+/**
+ * HÀM KHỞI ĐỘNG CHÍNH CỦA CHƯƠNG TRÌNH (Bootstrap)
+ * 
+ * Luồng hoạt động cơ bản:
+ * 1. Khởi tạo kết nối CSDL SQLite (DatabaseConnection).
+ * 2. Nạp dữ liệu mẫu (Seed Data) nếu hệ thống chưa có tài khoản nào.
+ * 3. Tạo các Repositories (Tầng giao tiếp trực tiếp với cơ sở dữ liệu).
+ * 4. Tạo các Services (Tầng xử lý nghiệp vụ, tính toán, kiểm tra logic).
+ * 5. Tạo các Views (Tầng giao diện dòng lệnh Console UI).
+ * 6. Chạy vòng lặp Menu chính tương tác với người dùng qua bàn phím.
+ */
 async function bootstrap() {
+  // BƯỚC 1: Lấy kết nối Database duy nhất (mẫu Singleton)
   const db = DatabaseConnection.getInstance();
   
+  // BƯỚC 2: Kiểm tra dữ liệu khởi tạo ban đầu (Nếu chưa có User thì nạp mẫu từ seed.sql)
   const userRepo = new UserRepository();
   if (userRepo.count() === 0) {
     db.seedDatabase();
   }
 
+  // BƯỚC 3: Khởi tạo các Repository (Thủ kho chuyên đọc/ghi các bảng dữ liệu)
   const equipmentRepo = new EquipmentRepository();
   const roomRepo = new RoomRepository(equipmentRepo);
   const customerRepo = new CustomerRepository();
@@ -37,6 +51,7 @@ async function bootstrap() {
   const contractRepo = new ContractRepository();
   const invoiceRepo = new InvoiceRepository();
 
+  // BƯỚC 4: Khởi tạo các Service (Người quản lý xử lý các quy tắc nghiệp vụ)
   const authService = new AuthService(userRepo);
   const equipmentService = new EquipmentService(equipmentRepo);
   const roomService = new RoomService(roomRepo, equipmentRepo);
@@ -47,6 +62,7 @@ async function bootstrap() {
   const paymentService = new PaymentService(invoiceRepo);
   const reportService = new ReportService(roomRepo, customerRepo, contractRepo, invoiceRepo);
 
+  // BƯỚC 5: Khởi tạo các View (Lễ tân hiển thị Menu ra màn hình console)
   const managementView = new ManagementView(
     roomService,
     customerService,
