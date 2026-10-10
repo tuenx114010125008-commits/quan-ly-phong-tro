@@ -15,7 +15,7 @@ export class ManagementView {
     private serviceService: ServiceService,
     private equipmentService: EquipmentService,
     private authService: AuthService
-  ) {}
+  ) { }
 
   // 1. Menu phong tro
   public async handleRoomMenu(): Promise<void> {

@@ -14,7 +14,8 @@ INSERT OR IGNORE INTO rooms (id, room_number, status, area, monthly_rent, descri
 ('P002', '102', 'AVAILABLE', 20.0, 3000000, 'Phòng tầng 1, cửa sổ lớn', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 ('P003', '201', 'RENTED', 30.0, 4200000, 'Phòng tầng 2, có gác lửng', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 ('P004', '202', 'MAINTENANCE', 22.0, 3200000, 'Phòng tầng 2, đang sơn sửa lại tường', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('P005', '301', 'AVAILABLE', 35.0, 4800000, 'Phòng tầng 3, full nội thất', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+('P005', '301', 'AVAILABLE', 35.0, 4800000, 'Phòng tầng 3, full nội thất', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('P006', '302', 'AVAILABLE', 28.0, 4000000, 'Phòng tầng 3, view thoáng mát', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- 3. EQUIPMENT
 INSERT OR IGNORE INTO equipment (id, room_id, name, condition, value, created_at, updated_at) VALUES

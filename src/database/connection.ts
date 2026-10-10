@@ -73,6 +73,18 @@ export class DatabaseConnection {
   }
 
   /**
+   * Thực thi chuỗi nhiều câu lệnh SQL (DDL đa lệnh như schema/seed)
+   */
+  public exec(sql: string): void {
+    try {
+      this.db.exec(sql);
+    } catch (err: any) {
+      Logger.error(`Lỗi exec SQL: ${err.message}`, 'DatabaseConnection');
+      throw err;
+    }
+  }
+
+  /**
    * Thực thi câu lệnh DDL / DML không trả về dữ liệu (INSERT, UPDATE, DELETE)
    */
   public execute(sql: string, params: any[] = []): void {

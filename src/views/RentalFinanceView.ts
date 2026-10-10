@@ -19,7 +19,7 @@ export class RentalFinanceView {
     private customerService: CustomerService,
     private roomService: RoomService,
     private authService: AuthService
-  ) {}
+  ) { }
 
   // 1. Menu hop dong
   public async handleContractMenu(): Promise<void> {

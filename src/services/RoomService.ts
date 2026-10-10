@@ -130,7 +130,7 @@ export class RoomService {
     const term = keyword.trim().toLowerCase();
     if (!term) return this.getAllRooms();
 
-    return this.roomRepo.find(room => 
+    return this.roomRepo.find(room =>
       room.roomNumber.toLowerCase().includes(term) ||
       room.id.toLowerCase().includes(term) ||
       Boolean(room.description?.toLowerCase().includes(term))
